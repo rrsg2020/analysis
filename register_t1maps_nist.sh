@@ -16,8 +16,8 @@
 #   image_mask.png
 
 # Uncomment for full verbose
-# set -x
-# set -v
+set -x
+set -v
 
 
 # PARAMETERS
@@ -62,5 +62,11 @@ for file in $FILES; do
 		antsApplyTransforms -d 2 -r $FILEREF.$EXT -i $file.$EXT -o ${file}_reg-labelbased.$EXT -t $file.mat
 		# Affine registration
 		antsRegistration -d 2 -r $file.mat -t Affine[0.1] -m CC[ $FILEREF.$EXT , $file.$EXT] -c 100x100x100 -s 0x0x0 -f 4x2x1 -x $FILEREF${SUFFIXMASK}.$EXT -o [$file_, $fileout.$EXT] -v
+		# Convert to jpg for easy QC
+		ConvertToJpg $file.$EXT $file.jpg
+		ConvertToJpg $fileout.$EXT $fileout.jpg
 	fi
 done
+# Also convert the reference image
+ConvertToJpg $FILEREF.$EXT $FILEREF.jpg
+ConvertToJpg $FILEREF.$EXT ${FILEREF}_reg.jpg
