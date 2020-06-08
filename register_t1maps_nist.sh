@@ -76,3 +76,6 @@ done
 # Also convert the reference image
 ConvertToJpg $FILEREF.$EXT $FILEREF.jpg
 ConvertToJpg $FILEREF.$EXT ${FILEREF}_reg.jpg
+# show syntax to convert to gif
+echo "Done! To convert to gif anim, you can use gifmaker (https://github.com/neuropoly/internal_tools/blob/master/python/gifmaker.py):"
+echo "gifmaker -i *t1map_reg.jpg -o t1map_reg.gif"
