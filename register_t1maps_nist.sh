@@ -14,6 +14,10 @@
 #   20200210_guillaumegilbert_muhc_NIST_Magnitude_t1map_labels.nii.gz
 # - You must also create a mask on the reference image, as examplified in:
 #   image_mask.png
+#
+# DEPENDENCIES:
+# - ANTs (antsRegistration)
+# - FSL (fslcpgeom)
 
 # Uncomment for full verbose
 set -x
@@ -53,8 +57,10 @@ for file in $FILES; do
 		# but for some reasons i do not understand, the flipping does not produce
 		# the same qform between the output image and labels (even though the inputs
 		# have the same qform...).
-	  CopyImageHeaderInformation $FILEREF.$EXT $file.$EXT ${file}_modifheader.$EXT 1 1 0
-	  CopyImageHeaderInformation $FILEREF.$EXT $file${SUFFIXLABEL}.$EXT ${file}_modifheader${SUFFIXLABEL}.$EXT 1 1 0
+    cp $file.$EXT ${file}_modifheader.$EXT
+    fslcpgeom $FILEREF.$EXT ${file}_modifheader.$EXT -d
+    cp $file${SUFFIXLABEL}.$EXT ${file}_modifheader${SUFFIXLABEL}.$EXT
+    fslcpgeom $FILEREF.$EXT ${file}_modifheader${SUFFIXLABEL}.$EXT -d
 	  file=${file}_modifheader
 		# Label-based registration
     antsLandmarkBasedTransformInitializer 2 $FILEREF$SUFFIXLABEL.$EXT $file$SUFFIXLABEL.$EXT affine $file.mat
