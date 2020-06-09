@@ -97,5 +97,4 @@ RUN cd $HOME;\
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
     git clone https://github.com/rrsg2020/analysis ;\
     cd analysis;\
-    git checkout ants_reproduce;\
     chmod +777 register_t1maps_nist.sh
