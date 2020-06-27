@@ -2,7 +2,6 @@
 
 import wget
 import zipfile
-import zipfile
 from pathlib import Path
 import os
 import sys
