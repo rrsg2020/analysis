@@ -1,0 +1,287 @@
+{
+    "refaatgabr_mcgovern_human":{
+        "OSF_link": "https://osf.io/b2sm8/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Magnitude",
+                "imagePath": "20200103_refaatgabr_mcgovern_human/20200103_refaatgabr_mcgovern_human.nii.gz"
+            }
+        }
+    },
+    "mrel_usc_human":{
+        "OSF_link": "https://osf.io/yu872/download/",
+        "datasets":{
+            "subject01": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200128_mrel_usc_GE3T_MR1_human_subject01.nii.gz"
+            },
+            "subject02": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200128_mrel_usc_GE3T_MR1_human_subject02.nii.gz"
+            },
+            "subject03": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200128_mrel_usc_GE3T_MR1_human_subject03.nii.gz"
+            },
+            "subject04": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200206_mrel_usc_GE3T_MR1_human_subject04.nii.gz"
+            },
+            "subject05": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200228_mrel_usc_GE3T_MR2_human_subject05.nii.gz"
+            },
+            "subject06": {
+                "dataType": "Magnitude",
+                "imagePath": "20200128_mrel_usc_human/20200228_mrel_usc_GE3T_MR2_human_subject06.nii.gz"
+            }
+        }
+    },
+    "iveslevesque_muhc_mgh_human":{
+        "OSF_link": "https://osf.io/fxky2/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Magnitude",
+                "imagePath": "20200203_iveslevesque_muhc_mgh_human/20200203_iveslevesque_muhc_mgh_human.nii.gz"
+            }
+        }
+    },
+    "siyuanhu_casewestern_human":{
+        "OSF_link": "https://osf.io/x5df2/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Magnitude",
+                "imagePath": "20200203_siyuanhu_casewestern_human/20200203_siyuanhu_casewestern_human.nii.gz"
+            }
+        }
+    },
+    "jorgejovicich_cimec_human":{
+        "OSF_link": "https://osf.io/t9wv5/download/",
+        "datasets":{
+            "subject1_20ch": {
+                "dataType": "Magnitude",
+                "imagePath": "20200207_jorgejovicich_cimec_human/subject_1/20200207_jorgejovicich_cimec_human_sub1_20ch.nii.gz"
+            },
+            "subject1_64ch": {
+                "dataType": "Magnitude",
+                "imagePath": "20200207_jorgejovicich_cimec_human/subject_1/20200207_jorgejovicich_cimec_human_sub1_64ch.nii.gz"
+            },
+            "subject2_20ch": {
+                "dataType": "Magnitude",
+                "imagePath": "20200207_jorgejovicich_cimec_human/subject_2/20200207_jorgejovicich_cimec_human_sub2_20ch.nii.gz"
+            },
+            "subject2_64ch": {
+                "dataType": "Magnitude",
+                "imagePath": "20200207_jorgejovicich_cimec_human/subject_2/20200207_jorgejovicich_cimec_human_sub2_64ch.nii.gz"
+            }
+        }
+    },
+    "marcocastellaro_UniPD_human":{
+        "OSF_link": "https://osf.io/n47jz/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Complex",
+                "real":{
+                    "imagePath": "20200219_marcocastellaro_UniPD_human/20200219_marcocastellaro_UniPD_human_real.nii.gz"
+                },
+                "imaginary":{
+                    "imagePath": "20200219_marcocastellaro_UniPD_human/20200219_marcocastellaro_UniPD_human_imag.nii.gz"
+                }
+            }
+        }
+    },
+    "madelinecarr_lha_human":{
+        "OSF_link": "https://osf.io/j5pru/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Magnitude",
+                "imagePath": "20200221_madelinecarr_lha_human/20200221_madelinecarr_lha_human.nii.gz"
+            }
+        }
+    },
+    "CStehningPhilipsClinicalScienceGermany_human":{
+        "OSF_link": "https://osf.io/esu6t/download/",
+        "datasets":{
+            "magnitude": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_human/Hamburg_MR1_InVivo_magnitude.nii.gz"
+            },
+            "complex": {
+                "dataType": "Complex",
+                "real":{
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_human/Hamburg_MR1_InVivo_real.nii.gz"
+                },
+                "imaginary":{
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_human/Hamburg_MR1_InVivo_imag.nii.gz"
+                }
+            }
+        }
+    },
+    "luisconcha_UNAM_human":{
+        "OSF_link": "https://osf.io/fubq6/download/",
+        "datasets":{
+            "session_1/21527/20200206_190116_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/21527/20200206_190116_Ph/21527_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/21527/20200120_191941_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/21527/20200120_191941_GE/21527_GE_raw_IRData.nii.gz"
+            },
+            "session_1/21527/20200120_191941_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/21527/20200120_191941_GE/21527_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/21527/20200124_120146_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/21527/20200124_120146_GE/21527_GE_raw_IRData.nii.gz"
+            },
+            "session_1/21527/20200124_120146_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/21527/20200124_120146_GE/21527_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56190/20200223_153220_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56190/20200223_153220_GE/56190_GE_raw_IRData.nii.gz"
+            },
+            "session_1/56190/20200223_153220_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56190/20200223_153220_GE/56190_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56190/20200223_151000_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56190/20200223_151000_Ph/56190_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/56961/20200223_135500_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56961/20200223_135500_GE/56961_GE_raw_IRData.nii.gz"
+            },
+            "session_1/56961/20200223_135500_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56961/20200223_135500_GE/56961_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56961/20200223_133135_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56961/20200223_133135_Ph/56961_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58416/20200223_141051_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58416/20200223_141051_Ph/58416_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58416/20200223_144142_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58416/20200223_144142_GE/58416_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58416/20200223_144142_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58416/20200223_144142_GE/58416_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/58139/20200223_145118_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58139/20200223_145118_Ph/58139_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58139/20200223_133141_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58139/20200223_133141_GE/58139_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58139/20200223_133141_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58139/20200223_133141_GE/58139_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/58173/20200206_182142_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58173/20200206_182142_Ph/58173_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58174/20200206_184031_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58174/20200206_184031_Ph/58174_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58414/20200223_130855_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58414/20200223_130855_GE/58414_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58414/20200223_130855_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58414/20200223_130855_GE/58414_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/58414/20200223_124551_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58414/20200223_124551_Ph/58414_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58413/20200223_122559_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58413/20200223_122559_GE/58413_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58413/20200223_122559_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58413/20200223_122559_GE/58413_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/58413/20200223_131003_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58413/20200223_131003_Ph/58413_Ph_real_IRData.nii.gz"
+            },
+            "session_1/58413/20200223_131003_Ph-2": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58413/20200223_131003_Ph/58413_Ph_real_IRData-2.nii.gz"
+            },
+            "session_1/56347/20200223_155637_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56347/20200223_155637_GE/56347_GE_raw_IRData.nii.gz"
+            },
+            "session_1/56347/20200223_155637_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56347/20200223_155637_GE/56347_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56347/20200223_152800_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56347/20200223_152800_Ph/56347_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58415/20200223_134934_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58415/20200223_134934_Ph/58415_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58415/20200223_142008_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58415/20200223_142008_GE/58415_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58415/20200223_142008_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58415/20200223_142008_GE/58415_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56348/20200223_124731_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56348/20200223_124731_GE/56348_GE_raw_IRData.nii.gz"
+            },
+            "session_1/56348/20200223_124731_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56348/20200223_124731_GE/56348_GE_filtered_IRData.nii.gz"
+            },
+            "session_1/56348/20200223_122504_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/56348/20200223_122504_Ph/56348_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58132/20200223_142721_Ph": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58132/20200223_142721_Ph/58132_Ph_mag_IRData.nii.gz"
+            },
+            "session_1/58132/20200223_150602_GE-raw": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58132/20200223_150602_GE/58132_GE_raw_IRData.nii.gz"
+            },
+            "session_1/58132/20200223_150602_GE-filtered": {
+                "dataType": "Magnitude",
+                "imagePath": "20200225_luisconcha_UNAM_human/session_1/58132/20200223_150602_GE/58132_GE_filtered_IRData.nii.gz"
+            }
+        }
+    },
+    "iveslevesque_muhc_glen_human":{
+        "OSF_link": "https://osf.io/btvd7/download/",
+        "datasets":{
+            "one": {
+                "dataType": "Magnitude",
+                "imagePath": "20200226_iveslevesque_muhc_glen_human/20200226_muhc_glen_Human.nii.gz"
+            }
+        }
+    }
+}
+

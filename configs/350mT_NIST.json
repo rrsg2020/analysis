@@ -1,0 +1,16 @@
+{
+    "niloufar_hfmc_NIST":{
+        "OSF_link": "https://osf.io/3frwb/download/",
+        "datasets":{
+            "4point": {
+                "dataType": "Magnitude",
+                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_NIST_4point.nii.gz"
+            },
+            "14point": {
+                "dataType": "Magnitude",
+                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_NIST_14point.nii.gz"
+            }
+        }
+    }
+}
+
