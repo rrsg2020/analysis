@@ -77,5 +77,5 @@ done
 ConvertToJpg $FILEREF.$EXT $FILEREF.jpg
 ConvertToJpg $FILEREF.$EXT ${FILEREF}_reg.jpg
 # show syntax to convert to gif
-echo "Done! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):"
+echo "Done! To convert results into a gif anim, run this command:"
 echo "gifmaker -i *t1map_reg.jpg -o t1map_reg.gif"
