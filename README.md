@@ -20,7 +20,7 @@
 
 Run the commands: 
 ```bash
-python make_pooled_datasets.py configs/3T_NIST_t1maps.json 3T_NIST_t1maps
+python make_pooled_datasets.py configs/3T_NIST_T1maps.json 3T_NIST_T1maps
 python make_pooled_datasets.py configs/3T_NIST.json 3T_NIST
 ```
 

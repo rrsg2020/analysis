@@ -22,7 +22,7 @@
         "datasets":{
             "one": {
                 "dataType": "Magnitude",
-                "imagePath": "20200124_siyuanhu_casewestern_NIST/20200124_siyuanhu_casewestern_NIST.nii.gz"
+                "imagePath": "20200124_siyuanhu_casewestern_NIST/20200124_siyuanhu_casewestern_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -31,7 +31,7 @@
         "datasets":{
             "one": {
                 "dataType": "Magnitude",
-                "imagePath": "20200203_iveslevesque_muhc_mgh_NIST/20200203_iveslevesque_muhc_mgh_NIST.nii.gz"
+                "imagePath": "20200203_iveslevesque_muhc_mgh_NIST/20200203_iveslevesque_muhc_mgh_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -40,27 +40,27 @@
         "datasets":{
             "Session1_MR1": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200204_mrel_usc_GE3T_MR1_NIST.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200204_mrel_usc_GE3T_MR1_NIST_Magnitude.nii.gz"
             },
             "Session1_MR2": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200204_mrel_usc_GE3T_MR2_NIST.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200204_mrel_usc_GE3T_MR2_NIST_Magnitude.nii.gz"
             },
             "Session2_MR1": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR1_NIST.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR1_NIST_Magnitude.nii.gz"
             },
             "Session2_MR1_TR10sec": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR1_NIST_TR10sec.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR1_TR10sec_NIST_Magnitude.nii.gz"
             },
             "Session2_MR2": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR2_NIST.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR2_NIST_Magnitude.nii.gz"
             },
             "Session2_MR2_TR10sec": {
                 "dataType": "Magnitude",
-                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR2_NIST_TR10sec.nii.gz"
+                "imagePath": "20200204_mrel_usc_NIST/20200209_mrel_usc_GE3T_MR2_TR10sec_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -87,93 +87,93 @@
         "datasets":{
             "Aachen_MR1_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Aachen_MR1_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Aachen_MR1_NIST_Magnitude.nii.gz"
             },
             "Aachen_MR1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Aachen_MR1_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Aachen_MR1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Aachen_MR1_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Aachen_MR1_NIST_Imaginary.nii.gz"
                 }
             },
             "Berlin_MR1_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Berlin_MR1_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Berlin_MR1_NIST_Magnitude.nii.gz"
             },
             "Berlin_MR1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Berlin_MR1_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Berlin_MR1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Berlin_MR1_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Berlin_MR1_NIST_Imaginary.nii.gz"
                 }
             },
             "Bonn_MR1_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Bonn_MR1_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Bonn_MR1_NIST_Magnitude.nii.gz"
             },
             "Bonn_MR1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Bonn_MR1_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Bonn_MR1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Bonn_MR1_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Bonn_MR1_NIST_Imaginary.nii.gz"
                 }
             },
             "Cologne_MR1_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR1_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR1_NIST_Magnitude.nii.gz"
             },
             "Cologne_MR1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR1_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR1_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR1_NIST_Imaginary.nii.gz"
                 }
             },
             "Cologne_MR3_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR3_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR3_NIST_Magnitude.nii.gz"
             },
             "Cologne_MR3_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR3_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR3_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR3_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR3_NIST_Imaginary.nii.gz"
                 }
             },
             "Cologne_MR4_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR4_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR4_NIST_Magnitude.nii.gz"
             },
             "Cologne_MR4_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR4_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR4_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Cologne_MR4_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Cologne_MR4_NIST_Imaginary.nii.gz"
                 }
             },
             "Hamburg_MR1_magnitude": {
                 "dataType": "Magnitude",
-                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Hamburg_MR1_magnitude.nii.gz"
+                "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Hamburg_MR1_NIST_Magnitude.nii.gz"
             },
             "Hamburg_MR1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Hamburg_MR1_real.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Hamburg_MR1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/Hamburg_MR1_imag.nii.gz"
+                    "imagePath": "20200225_CStehningPhilipsClinicalScienceGermany_NIST/20200225_CStehningPhilipsClinicalScienceGermany_Hamburg_MR1_NIST_Imaginary.nii.gz"
                 }
             }
         }
@@ -183,11 +183,11 @@
         "datasets":{
             "PowerError": {
                 "dataType": "Magnitude",
-                "imagePath": "20200226_iveslevesque_muhc_glen_NIST/PowerError/20200226_iveslevesque_muhc_glen_NIST_PowerError.nii.gz"
+                "imagePath": "20200226_iveslevesque_muhc_glen_NIST/PowerError/20200226_iveslevesque_muhc_glen_PowerError_NIST_Magnitude.nii.gz"
             },
             "NoPowerError": {
                 "dataType": "Magnitude",
-                "imagePath": "20200226_iveslevesque_muhc_glen_NIST/NoPowerError/20200226_iveslevesque_muhc_glen_NIST_NoPowerError.nii.gz"
+                "imagePath": "20200226_iveslevesque_muhc_glen_NIST/NoPowerError/20200226_iveslevesque_muhc_glen_NoPowerError_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -196,11 +196,11 @@
         "datasets":{
             "unf": {
                 "dataType": "Magnitude",
-                "imagePath": "20200227_karakuzu_polymtl_NIST/20191213_UNF/20191213_karakuzu_UNF_NIST_FS.nii.gz"
+                "imagePath": "20200227_karakuzu_polymtl_NIST/20191213_UNF/20191213_karakuzu_UNF_FS_NIST_Magnitude.nii.gz"
             },
             "mni": {
                 "dataType": "Magnitude",
-                "imagePath": "20200227_karakuzu_polymtl_NIST/20200227_MNI/20200227_karakuzu_mni_NIST_FS.nii.gz"
+                "imagePath": "20200227_karakuzu_polymtl_NIST/20200227_MNI/20200227_karakuzu_mni_FS_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -209,7 +209,7 @@
         "datasets":{
             "one": {
                 "dataType": "Magnitude",
-                "imagePath": "20200227_madelinecarr_lha_NIST/20200227_madelinecarr_lha_NIST.nii.gz"
+                "imagePath": "20200227_madelinecarr_lha_NIST/20200227_madelinecarr_lha_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -218,11 +218,11 @@
         "datasets":{
             "4point": {
                 "dataType": "Magnitude",
-                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_NIST_4point.nii.gz"
+                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_4point_NIST_Magnitude.nii.gz"
             },
             "14point": {
                 "dataType": "Magnitude",
-                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_NIST_14point.nii.gz"
+                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_14point_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -231,28 +231,28 @@
         "datasets":{
             "day1_mag": {
                 "dataType": "Magnitude",
-                "imagePath": "20200302_wang_MDAnderson_NIST/day1/day1_magn.nii.gz"
+                "imagePath": "20200302_wang_MDAnderson_NIST/day1/20200302_wang_MDAnderson_day1_NIST_Magnitude.nii.gz"
             },
             "day1_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200302_wang_MDAnderson_NIST/day1/day1_real.nii.gz"
+                    "imagePath": "20200302_wang_MDAnderson_NIST/day1/20200302_wang_MDAnderson_day1_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200302_wang_MDAnderson_NIST/day1/day1_imag.nii.gz"
+                    "imagePath": "20200302_wang_MDAnderson_NIST/day1/20200302_wang_MDAnderson_day1_NIST_Imaginary.nii.gz"
                 }
             },
             "day2_mag": {
                 "dataType": "Magnitude",
-                "imagePath": "20200302_wang_MDAnderson_NIST/day2/day2_magn.nii.gz"
+                "imagePath": "20200302_wang_MDAnderson_NIST/day2/20200302_wang_MDAnderson_day2_NIST_Magnitude.nii.gz"
             },
             "day2_complex": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20200302_wang_MDAnderson_NIST/day2/day2_real.nii.gz"
+                    "imagePath": "20200302_wang_MDAnderson_NIST/day2/20200302_wang_MDAnderson_day2_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20200302_wang_MDAnderson_NIST/day2/day2_imag.nii.gz"
+                    "imagePath": "20200302_wang_MDAnderson_NIST/day2/20200302_wang_MDAnderson_day2_NIST_Imaginary.nii.gz"
                 }
             }
         }
@@ -262,19 +262,19 @@
         "datasets":{
             "Prisma_noFS": {
                 "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_NIST_Prisma_noFS.nii.gz"
+                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Prisma_noFS_NIST_Magnitude.nii.gz"
             },
             "Prisma_FS": {
                 "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_NIST_Prisma_FS.nii.gz"
+                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Prisma_FS_NIST_Magnitude.nii.gz"
             },
             "Skyra_noFS": {
                 "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_NIST_Skyra_noFS.nii.gz"
+                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Skyra_noFS_NIST_Magnitude.nii.gz"
             },
             "Skyra_FS": {
                 "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_NIST_Skyra_FS.nii.gz"
+                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Skyra_FS_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -283,7 +283,7 @@
         "datasets":{
             "one": {
                 "dataType": "Magnitude",
-                "imagePath": "20200309_near_douglas_NIST/20200309_near_douglas_NIST.nii.gz"
+                "imagePath": "20200309_near_douglas_NIST/20200309_near_douglas_NIST_Magnitude.nii.gz"
             }
         }
     },
@@ -293,10 +293,10 @@
             "one": {
                 "dataType": "Complex",
                 "real":{
-                    "imagePath": "20201802_jalnefjord_sahlgrenska_NIST/20201802_jalnefjord_sahlgrenska_NIST_real.nii.gz"
+                    "imagePath": "20201802_jalnefjord_sahlgrenska_NIST/20201802_jalnefjord_sahlgrenska_NIST_Real.nii.gz"
                 },
                 "imaginary":{
-                    "imagePath": "20201802_jalnefjord_sahlgrenska_NIST/20201802_jalnefjord_sahlgrenska_NIST_imag.nii.gz"
+                    "imagePath": "20201802_jalnefjord_sahlgrenska_NIST/20201802_jalnefjord_sahlgrenska_NIST_Imaginary.nii.gz"
                 }
             }
         }

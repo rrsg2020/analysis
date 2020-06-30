@@ -27,11 +27,11 @@ set -v
 # PARAMETERS
 # ----------
 # Choose reference image. Do NOT add the extension
-FILEREF="20200210_guillaumegilbert_muhc_NIST_Magnitude_t1map"
+FILEREF="20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map"
 # Extension for NIFTI file names
 EXT="nii.gz"
 # Suffix of images to register
-SUFFIXT1="_t1map"
+SUFFIXT1="_T1map"
 SUFFIXLABEL="_labels"
 SUFFIXMASK="_mask"
 
@@ -77,5 +77,5 @@ done
 ConvertToJpg $FILEREF.$EXT $FILEREF.jpg
 ConvertToJpg $FILEREF.$EXT ${FILEREF}_reg.jpg
 # show syntax to convert to gif
-echo "Done! To convert results into a gif anim, run this command:"
-echo "gifmaker -i *t1map_reg.jpg -o t1map_reg.gif"
+echo "Done! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):"
+echo "gifmaker -i *T1map_reg.jpg -o T1map_reg.gif"
