@@ -33,3 +33,17 @@ Run the registration script:
 ```bash
 python register_t1maps_nist.py configs/3T_NIST.json 3T_NIST
 ```
+
+Note: you can specify which reference image (aka target) to choose for co-registering all the sites by editing the 
+`configs/.json` file and adding the field `"reference": true`. Example:
+
+```xml
+    "guillaumegilbert_muhc_NIST":{
+        "OSF_link": "https://osf.io/qnhjt/download/",
+        "datasets":{
+            "magnitude": {
+                "dataType": "Magnitude",
+                "imagePath": "20200210_guillaumegilbert_muhc_NIST/20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz",
+                "reference": true
+            },
+```
