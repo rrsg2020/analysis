@@ -15,10 +15,10 @@
 
 Labels and a phantom mask are already included in the T1 map OSF dataset 
 
-* Run the command `python make_pooled_datasets.py configs/3T_NIST_t1maps.json 3T_NIST_t1maps`
+* Run the command `python make_pooled_datasets.py configs/3T_NIST_T1maps.json 3T_NIST_T1maps`
 
 ### Register datasets to the reference
 
-* Open the pooled dataset folder: `cd 3T_NIST_t1maps_pooled`
+* Open the pooled dataset folder: `cd 3T_NIST_T1maps_pooled`
 * Run the registration pipeline: `../register_t1maps_nist.sh`
 
