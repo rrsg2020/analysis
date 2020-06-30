@@ -31,7 +31,7 @@ FILEREF="20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map"
 # Extension for NIFTI file names
 EXT="nii.gz"
 # Suffix of images to register
-SUFFIXT1="_t1map"
+SUFFIXT1="_T1map"
 SUFFIXLABEL="_labels"
 SUFFIXMASK="_mask"
 
