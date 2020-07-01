@@ -7,6 +7,10 @@ from pathlib import Path
 import shutil
 import subprocess
 
+import nibabel
+
+# TODO: create internal function for subprocess.run()
+
 
 SUFFIXMODIFHEADER = '_modifheader'
 
@@ -44,6 +48,16 @@ def add_suffix(fname, suffix):
     return os.path.join(stem + suffix + ext)
 
 
+def extract_first_echo(fname_nii):
+    """
+    Split input nii file across the 4th dimension and return file name of the 1st volume. This would typically be used
+    to split multi-echo data.
+    :param fname_nii: str: file name of input 4D nifti file
+    :return: fname_nii_1stecho: str: file name of 3D nifti file corresponding to the 1st volume
+    """
+    subprocess.run(['fslsplit', str(fname_nii), add_suffix(str(fname_nii), '_echo'), '-t'], stdout=subprocess.PIPE, text=True)
+
+
 def main():
     # First argument: Path to JSON config file
     # Second argument: Path to pooled NIST data
@@ -60,7 +74,7 @@ def main():
     # Get reference image
     # TODO
     file_mag_ref = Path(inputFolder, '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
-    # TODO: get first echo
+    file_mag_ref = extract_first_echo(file_mag_ref)
 
     # Loop across submitters (aka sites)
     for submitter in data.keys():
