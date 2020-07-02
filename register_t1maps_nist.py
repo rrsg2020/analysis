@@ -48,6 +48,16 @@ def add_suffix(fname, suffix):
     return os.path.join(stem + suffix + ext)
 
 
+def run_subprocess(cmd):
+    """
+    Wrapper for subprocess.run() that enables to input cmd as a full string (easier for debugging).
+    :param cmd:
+    :return:
+    """
+    print("\nRunning:\n{}".format(cmd))
+    subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
+
+
 def extract_first_echo(fname_nii):
     """
     Split input nii file across the 4th dimension and return file name of the 1st volume. This would typically be used
@@ -55,7 +65,9 @@ def extract_first_echo(fname_nii):
     :param fname_nii: str: file name of input 4D nifti file
     :return: fname_nii_1stecho: str: file name of 3D nifti file corresponding to the 1st volume
     """
-    subprocess.run(['fslsplit', str(fname_nii), add_suffix(str(fname_nii), '_echo'), '-t'], stdout=subprocess.PIPE, text=True)
+    run_subprocess('fslsplit {} {} -t'.format(fname_nii, add_suffix(str(fname_nii), '_echo')))
+    # Return file name of the first echo
+    return add_suffix(str(fname_nii), '_echo0000')
 
 
 def main():
@@ -82,7 +94,7 @@ def main():
             if dataset['dataType'] == 'Magnitude':
                 file_mag = Path(dataset['imagePath']).parts[-1]
                 file_mag = Path(inputFolder, file_mag)
-                print("\nProcessing: {}".format(file_mag))
+                print("\n---\nProcessing: {}".format(file_mag))
                 # register file_mag to ref_mag
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
@@ -96,7 +108,7 @@ def main():
                 # have the same qform...).
                 file_mag_modif = add_suffix(file_mag, SUFFIXMODIFHEADER)
                 shutil.copy(file_mag, file_mag_modif)
-                subprocess.run(['fslcpgeom', str(file_mag_ref), file_mag_modif], stdout=subprocess.PIPE, text=True)
+                run_subprocess('fslcpgeom {} {}'.format(file_mag_ref, file_mag_modif))
                 # TODO: registration
                 # apply inverse transformation to ref_mask
                 # TODO
