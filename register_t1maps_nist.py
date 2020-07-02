@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import argparse
 
 
 # TODO: try registering with 3rd echo
@@ -70,29 +71,35 @@ def extract_first_echo(fname_nii):
 
 
 def main():
-    # First argument: Path to JSON config file
-    # Second argument: Path to pooled NIST data
 
-    # Parse function input
-    args = sys.argv[1:]
-    configFilename = args[0]
-    inputFolder = args[1]
+    # initiate the parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-j", "--json", nargs=2, help="Json files corresponding to the raw (unprocessed) nifti files "
+                                                      "and t1maps, respectively.")
+    parser.add_argument("-p", "--path", nargs=2, help="Path to raw and t1maps folders, respectively.")
+
+    # read arguments from the command line
+    args = parser.parse_args()
+    config_files = args.json
+    input_folders = args.path
 
     # Load config file for datasets
-    with open(configFilename) as json_file:
-        data = json.load(json_file)
+    with open(config_files[0]) as json_file:
+        config_raw = json.load(json_file)
+    with open(config_files[1]) as json_file:
+        config_t1map = json.load(json_file)
 
     # Get reference image
     # TODO
-    file_mag_ref = Path(inputFolder, '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
+    file_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
     file_mag_ref = extract_first_echo(file_mag_ref)
 
     # Loop across submitters (aka sites)
-    for submitter in data.keys():
-        for _, dataset in data[submitter]['datasets'].items():
+    for submitter in config_raw.keys():
+        for _, dataset in config_raw[submitter]['datasets'].items():
             if dataset['dataType'] == 'Magnitude':
                 file_mag = Path(dataset['imagePath']).parts[-1]
-                file_mag = Path(inputFolder, file_mag)
+                file_mag = Path(input_folders[0], file_mag)
                 print("\n---\nProcessing: {}".format(file_mag))
                 # Extract first echo before copying header (to make sure src/dest dims are the same)
                 file_mag_firstecho = extract_first_echo(file_mag)
@@ -109,7 +116,10 @@ def main():
                 file_mag_src = add_suffix(file_mag_firstecho, SUFFIXMODIFHEADER)
                 shutil.copy(file_mag_firstecho, file_mag_src)
                 run_subprocess('fslcpgeom {} {} -d'.format(file_mag_ref, file_mag_src))
-                a=1
+                # bring label to proper folder and update header
+                # TODO: fetch label filename
+                # file_label =
+                shutil.copy(file_label, file_label_src)
                 # TODO: registration
                 # apply inverse transformation to ref_mask
                 # TODO
