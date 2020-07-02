@@ -7,9 +7,8 @@ from pathlib import Path
 import shutil
 import subprocess
 
-import nibabel
 
-# TODO: create internal function for subprocess.run()
+# TODO: try registering with 3rd echo
 
 
 SUFFIXMODIFHEADER = '_modifheader'
@@ -95,7 +94,8 @@ def main():
                 file_mag = Path(dataset['imagePath']).parts[-1]
                 file_mag = Path(inputFolder, file_mag)
                 print("\n---\nProcessing: {}".format(file_mag))
-                # register file_mag to ref_mag
+                # Extract first echo before copying header (to make sure src/dest dims are the same)
+                file_mag_firstecho = extract_first_echo(file_mag)
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
                 # in the clockwise direction (whereas they are oriented anti-clockwise in
@@ -106,9 +106,10 @@ def main():
                 # but for some reasons i do not understand, the flipping does not produce
                 # the same qform between the output image and labels (even though the inputs
                 # have the same qform...).
-                file_mag_modif = add_suffix(file_mag, SUFFIXMODIFHEADER)
-                shutil.copy(file_mag, file_mag_modif)
-                run_subprocess('fslcpgeom {} {}'.format(file_mag_ref, file_mag_modif))
+                file_mag_src = add_suffix(file_mag_firstecho, SUFFIXMODIFHEADER)
+                shutil.copy(file_mag_firstecho, file_mag_src)
+                run_subprocess('fslcpgeom {} {} -d'.format(file_mag_ref, file_mag_src))
+                a=1
                 # TODO: registration
                 # apply inverse transformation to ref_mask
                 # TODO
