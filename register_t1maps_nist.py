@@ -151,8 +151,8 @@ def main():
     run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
     # Show syntax to convert to gif
     # TODO: use the Python's API
-    print("\nDone! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):",
-          "gifmaker -i *T1map_reg.jpg -o T1map_reg.gif")
+    print("\nDone! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):\n",
+          "gifmaker -i {}/*_reg.jpg -o mag_reg.gif".format(input_folders[0]))
 
 
 if __name__ == "__main__":
