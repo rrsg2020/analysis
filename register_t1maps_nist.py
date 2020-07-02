@@ -12,6 +12,7 @@ import argparse
 SUFFIXMODIFHEADER = '_modifheader'
 SUFFIXLABEL = '_T1map_labels'
 NUM_ECHO = 2  # index of echo to use for registration
+NUM_ECHO_APPLY = 2  # index of echo to use for visual QC assessment
 
 
 def add_suffix(fname, suffix):
@@ -104,8 +105,8 @@ def main():
                 file_mag = Path(dataset['imagePath']).parts[-1]
                 fname_mag = Path(input_folders[0], file_mag)
                 print("\n---\nProcessing: {}".format(fname_mag))
-                # Extract first echo before copying header (to make sure src/dest dims are the same)
-                fname_mag_firstecho = extract_volume(fname_mag, NUM_ECHO)
+                # Extract specific echo before copying header (to make sure src/dest dims are the same)
+                fname_mag_echo = extract_volume(fname_mag, NUM_ECHO)
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
                 # in the clockwise direction (whereas they are oriented anti-clockwise in
@@ -116,8 +117,8 @@ def main():
                 # but for some reasons i do not understand, the flipping does not produce
                 # the same qform between the output image and labels (even though the inputs
                 # have the same qform...).
-                fname_mag_src = add_suffix(fname_mag_firstecho, SUFFIXMODIFHEADER)
-                shutil.copy(fname_mag_firstecho, fname_mag_src)
+                fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
+                shutil.copy(fname_mag_echo, fname_mag_src)
                 run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_mag_src))
                 # bring label to proper folder and update header
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
