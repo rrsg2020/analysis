@@ -9,11 +9,9 @@ import subprocess
 import argparse
 
 
-# TODO: try registering with 3rd echo
-
-
 SUFFIXMODIFHEADER = '_modifheader'
 SUFFIXLABEL = '_T1map_labels'
+NUM_ECHO = 2  # index of echo to use for registration
 
 
 def add_suffix(fname, suffix):
@@ -59,16 +57,17 @@ def run_subprocess(cmd):
     subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
 
 
-def extract_first_echo(fname_nii):
+def extract_volume(fname_nii, ivol=0):
     """
     Split input nii file across the 4th dimension and return file name of the 1st volume. This would typically be used
     to split multi-echo data.
     :param fname_nii: str: file name of input 4D nifti file
+    :param ivol: uint: Index of volume to extract
     :return: fname_nii_1stecho: str: file name of 3D nifti file corresponding to the 1st volume
     """
     run_subprocess('fslsplit {} {} -t'.format(fname_nii, add_suffix(str(fname_nii), '_echo')))
     # Return file name of the first echo
-    return add_suffix(str(fname_nii), '_echo0000')
+    return add_suffix(str(fname_nii), '_echo000{}'.format(ivol))
 
 
 def main():
@@ -94,7 +93,7 @@ def main():
     # Get reference image
     # TODO
     fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
-    fname_mag_ref = extract_first_echo(fname_mag_ref)
+    fname_mag_ref = extract_volume(fname_mag_ref, NUM_ECHO)
     fname_label_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_labels.nii.gz')
     fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
 
@@ -106,7 +105,7 @@ def main():
                 fname_mag = Path(input_folders[0], file_mag)
                 print("\n---\nProcessing: {}".format(fname_mag))
                 # Extract first echo before copying header (to make sure src/dest dims are the same)
-                fname_mag_firstecho = extract_first_echo(fname_mag)
+                fname_mag_firstecho = extract_volume(fname_mag, NUM_ECHO)
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
                 # in the clockwise direction (whereas they are oriented anti-clockwise in
