@@ -54,7 +54,7 @@ def run_subprocess(cmd):
     :param cmd:
     :return:
     """
-    print("\nRunning:\n{}".format(cmd))
+    print("{}".format(cmd))
     subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
 
 
@@ -91,18 +91,20 @@ def main():
 
     # Get reference image
     # TODO
-    file_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
-    file_mag_ref = extract_first_echo(file_mag_ref)
+    fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
+    fname_mag_ref = extract_first_echo(fname_mag_ref)
+    fname_label_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_labels.nii.gz')
+    fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
 
     # Loop across submitters (aka sites)
     for submitter in config_raw.keys():
         for _, dataset in config_raw[submitter]['datasets'].items():
             if dataset['dataType'] == 'Magnitude':
                 file_mag = Path(dataset['imagePath']).parts[-1]
-                file_mag = Path(input_folders[0], file_mag)
-                print("\n---\nProcessing: {}".format(file_mag))
+                fname_mag = Path(input_folders[0], file_mag)
+                print("\n---\nProcessing: {}".format(fname_mag))
                 # Extract first echo before copying header (to make sure src/dest dims are the same)
-                file_mag_firstecho = extract_first_echo(file_mag)
+                fname_mag_firstecho = extract_first_echo(fname_mag)
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
                 # in the clockwise direction (whereas they are oriented anti-clockwise in
@@ -113,16 +115,40 @@ def main():
                 # but for some reasons i do not understand, the flipping does not produce
                 # the same qform between the output image and labels (even though the inputs
                 # have the same qform...).
-                file_mag_src = add_suffix(file_mag_firstecho, SUFFIXMODIFHEADER)
-                shutil.copy(file_mag_firstecho, file_mag_src)
-                run_subprocess('fslcpgeom {} {} -d'.format(file_mag_ref, file_mag_src))
+                fname_mag_src = add_suffix(fname_mag_firstecho, SUFFIXMODIFHEADER)
+                shutil.copy(fname_mag_firstecho, fname_mag_src)
+                run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_mag_src))
                 # bring label to proper folder and update header
-                # TODO: fetch label filename
-                # file_label =
-                shutil.copy(file_label, file_label_src)
-                # TODO: registration
+                # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
+                fname_label = Path(input_folders[0], add_suffix(file_mag, '_T1map_labels'+SUFFIXMODIFHEADER))
+                shutil.copy(Path(input_folders[1], add_suffix(file_mag, '_T1map_labels')),
+                            fname_label)
+                run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_label))
+                # Label-based registration
+                fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
+                run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
+                    fname_label_ref, fname_label, fname_affine))
+                # Apply transformation (only for debugging purpose)
+                run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t {}'.format(
+                    fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
+                # Affine registration
+                fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
+                run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 '
+                               '-f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
+                    fname_affine, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'),
+                    fname_mag_src_reg))
                 # apply inverse transformation to ref_mask
                 # TODO
+                # Convert to jpg for easy QC
+                run_subprocess('ConvertToJpg {} {}'.format(
+                    fname_mag_src_reg, fname_mag_src_reg.replace('nii.gz', 'jpg')))
+
+    # Also convert the reference image
+    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
+    # Show syntax to convert to gif
+    # TODO: use the Python's API
+    print("\nDone! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):",
+          "gifmaker -i *T1map_reg.jpg -o T1map_reg.gif")
 
 
 if __name__ == "__main__":
