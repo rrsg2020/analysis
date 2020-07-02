@@ -13,6 +13,7 @@ import argparse
 
 
 SUFFIXMODIFHEADER = '_modifheader'
+SUFFIXLABEL = '_T1map_labels'
 
 
 def add_suffix(fname, suffix):
@@ -74,20 +75,21 @@ def main():
 
     # initiate the parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-j", "--json", nargs=2, help="Json files corresponding to the raw (unprocessed) nifti files "
-                                                      "and t1maps, respectively.")
+    parser.add_argument("-j", "--json", nargs=1, help="Json file corresponding to the raw (unprocessed) nifti files.")
     parser.add_argument("-p", "--path", nargs=2, help="Path to raw and t1maps folders, respectively.")
 
     # read arguments from the command line
     args = parser.parse_args()
+    # show help if not enough arguments
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
     config_files = args.json
     input_folders = args.path
 
     # Load config file for datasets
     with open(config_files[0]) as json_file:
-        config_raw = json.load(json_file)
-    with open(config_files[1]) as json_file:
-        config_t1map = json.load(json_file)
+        config_json = json.load(json_file)
 
     # Get reference image
     # TODO
@@ -97,8 +99,8 @@ def main():
     fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
 
     # Loop across submitters (aka sites)
-    for submitter in config_raw.keys():
-        for _, dataset in config_raw[submitter]['datasets'].items():
+    for submitter in config_json.keys():
+        for _, dataset in config_json[submitter]['datasets'].items():
             if dataset['dataType'] == 'Magnitude':
                 file_mag = Path(dataset['imagePath']).parts[-1]
                 fname_mag = Path(input_folders[0], file_mag)
@@ -120,29 +122,31 @@ def main():
                 run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_mag_src))
                 # bring label to proper folder and update header
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
-                fname_label = Path(input_folders[0], add_suffix(file_mag, '_T1map_labels'+SUFFIXMODIFHEADER))
-                shutil.copy(Path(input_folders[1], add_suffix(file_mag, '_T1map_labels')),
-                            fname_label)
-                run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_label))
-                # Label-based registration
-                fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
-                run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
-                    fname_label_ref, fname_label, fname_affine))
-                # Apply transformation (only for debugging purpose)
-                run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t {}'.format(
-                    fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
-                # Affine registration
-                fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
-                run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 '
-                               '-f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
-                    fname_affine, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'),
-                    fname_mag_src_reg))
-                # apply inverse transformation to ref_mask
-                # TODO
-                # Convert to jpg for easy QC
-                run_subprocess('ConvertToJpg {} {}'.format(
-                    fname_mag_src_reg, fname_mag_src_reg.replace('nii.gz', 'jpg')))
-
+                fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
+                if os.path.exists(fname_label_src):
+                    fname_label = Path(input_folders[0], add_suffix(file_mag, SUFFIXLABEL+SUFFIXMODIFHEADER))
+                    shutil.copy(fname_label_src, fname_label)
+                    run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_label))
+                    # Label-based registration
+                    fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
+                    run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
+                        fname_label_ref, fname_label, fname_affine))
+                    # Apply transformation (only for debugging purpose)
+                    run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t {}'.format(
+                        fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
+                    # Affine registration
+                    fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
+                    run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 '
+                                   '-f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
+                        fname_affine, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'),
+                        fname_mag_src_reg))
+                    # apply inverse transformation to ref_mask
+                    # TODO
+                    # Convert to jpg for easy QC
+                    run_subprocess('ConvertToJpg {} {}'.format(
+                        fname_mag_src_reg, fname_mag_src_reg.replace('nii.gz', 'jpg')))
+                else:
+                    print("Label does not exist. Skipping this subject.")
     # Also convert the reference image
     run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
     # Show syntax to convert to gif
