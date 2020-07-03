@@ -261,14 +261,6 @@
     "ngmaforo_ucla_NIST":{
         "OSF_link": "https://osf.io/jkf69/download/",
         "datasets":{
-            "Prisma_noFS": {
-                "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Prisma_noFS_NIST_Magnitude.nii.gz"
-            },
-            "Prisma_FS": {
-                "dataType": "Magnitude",
-                "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Prisma_FS_NIST_Magnitude.nii.gz"
-            },
             "Skyra_noFS": {
                 "dataType": "Magnitude",
                 "imagePath": "20200305_ngmaforo_ucla_NIST/20200305_ngmaforo_ucla_Skyra_noFS_NIST_Magnitude.nii.gz"
