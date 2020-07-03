@@ -8,11 +8,12 @@ import shutil
 import subprocess
 import argparse
 
+# TODO: add verbose mode
+# TODO: make it possible to apply transformations to a specific echo (for easier visual QC)
 
 SUFFIXMODIFHEADER = '_modifheader'
 SUFFIXLABEL = '_T1map_labels'
 NUM_ECHO = 2  # index of echo to use for registration
-NUM_ECHO_APPLY = 2  # index of echo to use for visual QC assessment
 
 
 def add_suffix(fname, suffix):
@@ -136,10 +137,8 @@ def main():
                         fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
                     # Affine registration
                     fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
-                    run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 '
-                                   '-f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
-                        fname_affine, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'),
-                        fname_mag_src_reg))
+                    run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
+                        fname_affine, fname_mag_ref, fname_mag_src, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
                     # apply inverse transformation to ref_mask
                     # TODO
                     # Convert to jpg for easy QC
