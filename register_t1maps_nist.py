@@ -9,6 +9,7 @@ import subprocess
 import argparse
 import glob
 import datetime
+from PIL import Image, ImageFont, ImageDraw
 
 from gifmaker.gifmaker import creategif
 
@@ -147,18 +148,21 @@ def main():
                     # apply inverse transformation to ref_mask
                     # TODO
                     # Convert to jpg for easy QC
-                    run_subprocess('ConvertToJpg {} {}'.format(
-                        fname_mag_src_reg, fname_mag_src_reg.replace('nii.gz', 'jpg')))
+                    fname_jpg = fname_mag_src_reg.replace('nii.gz', 'jpg')
+                    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_src_reg, fname_jpg))
+                    # Add name of scan in the image
+                    img = Image.open(fname_jpg)
+                    draw = ImageDraw.Draw(img)
+                    draw.text((0, 0), file_mag, fill=255)
+                    img.save(fname_jpg)
                 else:
                     print("Label does not exist. Skipping this subject.")
     # Also convert the reference image
     run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
     # Create gif
-    creategif(glob.glob(os.path.join(input_folders[0], '*echo000{}*_reg.jpg'.format(NUM_ECHO))),
-              'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S")),
-              duration=0.3)
-    print("\nDone! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):\n",
-          "gifmaker -i {}/*_reg.jpg -o mag_reg.gif".format(input_folders[0]))
+    file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+    creategif(glob.glob(os.path.join(input_folders[0], '*echo000{}*_reg.jpg'.format(NUM_ECHO))), file_gif, duration=0.3)
+    print("\nFinished! \n--> {}".format(file_gif))
 
 
 if __name__ == "__main__":
