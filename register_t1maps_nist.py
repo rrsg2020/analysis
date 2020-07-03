@@ -7,6 +7,11 @@ from pathlib import Path
 import shutil
 import subprocess
 import argparse
+import glob
+import datetime
+
+from gifmaker.gifmaker import creategif
+
 
 # TODO: add verbose mode
 # TODO: make it possible to apply transformations to a specific echo (for easier visual QC)
@@ -93,11 +98,11 @@ def main():
         config_json = json.load(json_file)
 
     # Get reference image
-    # TODO
     fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
     fname_mag_ref = extract_volume(fname_mag_ref, NUM_ECHO)
     fname_label_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_labels.nii.gz')
-    fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
+    # Uncomment to use a mask for registration
+    # fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
@@ -137,8 +142,8 @@ def main():
                         fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
                     # Affine registration
                     fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
-                    run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -x {} -o [ {} , {} ] -v'.format(
-                        fname_affine, fname_mag_ref, fname_mag_src, fname_mag_ref, fname_mag_src, fname_mask_ref, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
+                    run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -o [ {} , {} ] -v'.format(
+                        fname_affine, fname_mag_ref, fname_mag_src, fname_mag_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
                     # apply inverse transformation to ref_mask
                     # TODO
                     # Convert to jpg for easy QC
@@ -148,8 +153,10 @@ def main():
                     print("Label does not exist. Skipping this subject.")
     # Also convert the reference image
     run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
-    # Show syntax to convert to gif
-    # TODO: use the Python's API
+    # Create gif
+    creategif(glob.glob(os.path.join(input_folders[0], '*echo000{}*_reg.jpg'.format(NUM_ECHO))),
+              'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S")),
+              duration=0.3)
     print("\nDone! To convert to gif anim, you can use gifmaker (https://neuropoly.github.io/gifmaker/):\n",
           "gifmaker -i {}/*_reg.jpg -o mag_reg.gif".format(input_folders[0]))
 
