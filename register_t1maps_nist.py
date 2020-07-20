@@ -75,7 +75,10 @@ def extract_volume(fname_nii, ivol=0):
     """
     run_subprocess('fslsplit {} {} -t'.format(fname_nii, add_suffix(str(fname_nii), '_echo')))
     # Return file name of the first echo
-    return add_suffix(str(fname_nii), '_echo000{}'.format(ivol))
+    if ivol<10:
+        return add_suffix(str(fname_nii), '_echo000{}'.format(ivol))
+    else:
+        return add_suffix(str(fname_nii), '_echo00{}'.format(ivol))
 
 
 def main():
@@ -113,7 +116,13 @@ def main():
                 fname_mag = Path(input_folders[0], file_mag)
                 print("\n---\nProcessing: {}".format(fname_mag))
                 # Extract specific echo before copying header (to make sure src/dest dims are the same)
-                fname_mag_echo = extract_volume(fname_mag, NUM_ECHO)
+                if '14point' in str(fname_mag):
+                    # Edge case for the only acquisition that wasn't acquired with 4 inversion times.
+                    # Echo value is for the phantom background signal null of the 14 point acquisition.
+                    ECHO = 10
+                    fname_mag_echo = extract_volume(fname_mag, ECHO)
+                else:
+                    fname_mag_echo = extract_volume(fname_mag, NUM_ECHO)
                 # Some sites placed the phantom with a flip along z axis, or oriented the
                 # FOV along another direction than the ref image, causing the labels to go
                 # in the clockwise direction (whereas they are oriented anti-clockwise in
@@ -161,7 +170,7 @@ def main():
     run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
     # Create gif
     file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-    creategif(glob.glob(os.path.join(input_folders[0], '*echo000{}*_reg.jpg'.format(NUM_ECHO))), file_gif, duration=0.3)
+    creategif(glob.glob(os.path.join(input_folders[0], '*echo*_reg.jpg')), file_gif, duration=0.3)
     print("\nFinished! \n--> {}".format(file_gif))
 
 
