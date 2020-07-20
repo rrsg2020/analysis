@@ -32,7 +32,7 @@ Note: Labels and a phantom mask are already included in the T1 map OSF dataset
 
 Run the registration script:
 ```bash
-python register_t1maps_nist.py configs/3T_NIST.json 3T_NIST
+python register_t1maps_nist.py -j configs/3T_NIST.json -p 3T_NIST_pooled/ 3T_NIST_T1maps_pooled/
 ```
 
 Note: you can specify which reference image (aka target) to choose for co-registering all the sites by editing the 
