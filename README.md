@@ -8,6 +8,7 @@
 
 * [ANTs](https://github.com/ANTsX/ANTs)
 * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
+* Python 3.7
 * Clone this repository and install its requirements:
   ````bash
   git lone https://github.com/rrsg2020/analysis.git rrsg2020/analysis
