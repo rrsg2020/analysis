@@ -13,4 +13,4 @@ wget==3.2
 nibabel
 matplotlib
 pandas
-openpyxl==3.0.4
+openpyxl
