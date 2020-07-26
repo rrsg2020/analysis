@@ -64,34 +64,6 @@ ENV POSSUMDIR=/usr/share/fsl/5.0
 #make it work under singularity
 RUN ldconfig && mkdir -p /N/u /N/home /N/dc2 /N/soft
 
-#https://wiki.ubuntu.com/DashAsBinSh
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-RUN apt remove cmake;\
-    pip3 install cmake --upgrade
-
-RUN apt-get install zlib1g-dev
-
-# create user with a home directory
-ARG NB_USER
-ARG NB_UID
-ENV USER ${NB_USER}
-ENV HOME /home/${NB_USER}
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-WORKDIR $HOME
-USER ${USER}
-
-RUN cd $HOME;\
-    pwd;\
-    git clone https://github.com/cookpa/antsInstallExample.git;\
-    cd antsInstallExample;\
-    chmod +777 installANTs.sh;\
-    ./installANTs.sh
-
 RUN cd $HOME;\
     echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
