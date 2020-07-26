@@ -38,15 +38,17 @@ RUN pip3 install --no-cache --upgrade pip && \
     pip3 install --no-cache setuptools && \
     pip3 install --no-cache notebook
 
-RUN cd $HOME;\
+RUN cd ~;\
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;\
     bash ~/miniconda.sh -b -p $HOME/miniconda;\
     echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc;\
-    /bin/bash -c "source ~/.bashrc";\
-    git clone https://github.com/rrsg2020/analysis ; \
-    cd analysis;\
+    /bin/bash -c "~/miniconda/etc/profile.d/conda.sh";\
     conda install nb_conda;\
     conda create -n rrsg_venv python=3.7;\
     /bin/bash -c "source activate rrsg_venv";\
+    echo "source activate rrsg_venv" > ~/.bashrc
+    git clone https://github.com/rrsg2020/analysis ; \
+    cd $HOME;\
+    cd analysis;\
     pip install -r requirements.txt
     #chmod +777 register_t1maps_nist.sh
