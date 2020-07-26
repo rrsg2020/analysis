@@ -47,5 +47,6 @@ RUN cd ~;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd $HOME;\
     cd analysis;\
+    pip install jupyter;\
     pip install -r requirements.txt
     #chmod +777 register_t1maps_nist.sh
