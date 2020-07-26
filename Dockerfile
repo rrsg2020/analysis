@@ -45,5 +45,8 @@ RUN cd $HOME;\
     /bin/bash -c "source ~/.bashrc";\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
+    conda install nb_conda;\
+    conda create -n rrsg_venv python=3.7;\
+    /bin/bash -c "source activate rrsg_venv";\
     pip install -r requirements.txt
     #chmod +777 register_t1maps_nist.sh
