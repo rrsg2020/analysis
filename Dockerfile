@@ -42,7 +42,7 @@ RUN cd ~;\
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;\
     bash ~/miniconda.sh -b -p $HOME/miniconda;\
     echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc;\
-    /bin/bash -c "~/miniconda/etc/profile.d/conda.sh";\
+    /bin/bash -c . "~/miniconda/etc/profile.d/conda.sh";\
     echo "source activate base" > ~/.bashrc;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd $HOME;\
