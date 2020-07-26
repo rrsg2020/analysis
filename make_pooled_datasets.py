@@ -8,14 +8,15 @@ import sys
 import json
 import shutil
 
-def main():
+def make_pooled_dataset(configFilename=None, outputFolder=None):
     # First argument: Path to JSON config file
     # Second argument: Path to base saved directory
 
-    # Parse function input
-    args = sys.argv[1:]
-    configFilename = args[0]
-    outputFolder = args[1]
+    if configFilename is None or outputFolder is None:
+        # Parse function input
+        args = sys.argv[1:]
+        configFilename = args[0]
+        outputFolder = args[1]
 
 
     # Load config file for datasets
@@ -49,4 +50,4 @@ def main():
         shutil.copyfile(file, rootdir / newDir / file.name) 
 
 if __name__ == "__main__":
-    main()
+    make_pooled_dataset()

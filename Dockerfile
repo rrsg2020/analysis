@@ -95,6 +95,6 @@ RUN cd $HOME;\
 RUN cd $HOME;\
     echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
-    git clone https://github.com/rrsg2020/analysis ;\
+    git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
     chmod +777 register_t1maps_nist.sh
