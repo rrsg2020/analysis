@@ -95,10 +95,6 @@ RUN cd $HOME;\
 RUN cd $HOME;\
     echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;\
-    bash ~/miniconda.sh -b -p $HOME/miniconda;\
-    echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc;\
-    source ~/.bashrc;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
     pip install -r requirements.txt
