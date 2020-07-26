@@ -42,7 +42,7 @@ RUN cd $HOME;\
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;\
     bash ~/miniconda.sh -b -p $HOME/miniconda;\
     echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc;\
-    source ~/.bashrc;\
+    /bin/bash -c "source ~/.bashrc";\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
     pip install -r requirements.txt
