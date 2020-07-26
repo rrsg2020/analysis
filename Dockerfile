@@ -46,7 +46,7 @@ RUN cd ~;\
     conda install nb_conda;\
     conda create -n rrsg_venv python=3.7;\
     /bin/bash -c "source activate rrsg_venv";\
-    echo "source activate rrsg_venv" > ~/.bashrc
+    echo "source activate rrsg_venv" > ~/.bashrc;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd $HOME;\
     cd analysis;\
