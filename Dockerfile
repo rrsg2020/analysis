@@ -87,20 +87,6 @@ RUN echo "Downloading Miniconda installer ..." \
     && conda config --system --set show_channel_urls true \
     && conda clean -tipsy && sync
 
-#-------------------------
-# Create conda environment
-#-------------------------
-RUN conda create -y -q --name neuro python=3.7 \
-                                    traits \
-    && sync && conda clean -tipsy && sync \
-    && /bin/bash -c "source activate neuro \
-      && pip install -q --no-cache-dir nipype" \
-    && sync;\
-    cd $HOME;\
-    git clone https://github.com/rrsg2020/analysis ; \
-    cd analysis;\
-    pip install -r requirements.txt
-
 # create user with a home directory
 ARG NB_USER
 ARG NB_UID
@@ -121,5 +107,19 @@ RUN cd $HOME;\
     chmod +777 installANTs.sh
 
 RUN echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
-    echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
+    echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc
     #chmod +777 register_t1maps_nist.sh
+
+#-------------------------
+# Create conda environment
+#-------------------------
+RUN conda create -y -q --name neuro python=3.7 \
+                                    traits \
+    && sync && conda clean -tipsy && sync \
+    && /bin/bash -c "source activate neuro \
+      && pip install -q --no-cache-dir nipype" \
+    && sync;\
+    cd $HOME;\
+    git clone https://github.com/rrsg2020/analysis ; \
+    cd analysis;\
+    pip install -r requirements.txt
