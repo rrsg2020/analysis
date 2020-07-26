@@ -43,10 +43,7 @@ RUN cd ~;\
     bash ~/miniconda.sh -b -p $HOME/miniconda;\
     echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc;\
     /bin/bash -c "~/miniconda/etc/profile.d/conda.sh";\
-    conda install nb_conda;\
-    conda create -n rrsg_venv python=3.7;\
-    /bin/bash -c "source activate rrsg_venv";\
-    echo "source activate rrsg_venv" > ~/.bashrc;\
+    echo "source activate base" > ~/.bashrc;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd $HOME;\
     cd analysis;\
