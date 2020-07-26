@@ -95,7 +95,11 @@ RUN conda create -y -q --name neuro python=3.7 \
     && sync && conda clean -tipsy && sync \
     && /bin/bash -c "source activate neuro \
       && pip install -q --no-cache-dir nipype" \
-    && sync
+    && sync;\
+    cd $HOME;\
+    git clone https://github.com/rrsg2020/analysis ; \
+    cd analysis;\
+    pip install -r requirements.txt
 
 # create user with a home directory
 ARG NB_USER
@@ -116,10 +120,6 @@ RUN cd $HOME;\
     cd antsInstallExample;\
     chmod +777 installANTs.sh
 
-RUN cd $HOME;\
-    echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
+RUN echo 'export ANTSPATH=/home/jovyan/antsInstallExample/install/bin/' >> ~/.bashrc ; \
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
-    git clone https://github.com/rrsg2020/analysis ; \
-    cd analysis;\
-    pip install -r requirements.txt
     #chmod +777 register_t1maps_nist.sh
