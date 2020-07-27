@@ -122,5 +122,6 @@ RUN conda create -y -q --name neuro python=3.7 \
     cd $HOME;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
-    conda install nb_conda;\
-    pip install -r requirements.txt
+    pip install -r requirements.txt;\
+    conda install nb_conda
+
