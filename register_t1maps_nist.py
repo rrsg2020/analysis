@@ -127,14 +127,17 @@ def main():
     # Get reference image
     fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
     nii_ref = nibabel.load(fname_ref)
-    # Create labels on ref image
+    # Create labels on ref image and save as nifti file
     data_ref_label = np.zeros_like(nii_ref.get_fdata())
     # TODO: move the hard-coded part below somewhere else
     coord_labels = [(95, 154), (39, 77), (151, 77)]
     for coord_label in coord_labels:
-        data_ref_label[coord_label] = 1
+        # Here, instead of creating single-point label, we create 3x3 labels. More details here:
+        #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
+        data_ref_label[coord_label[0]-1: coord_label[0]+2, coord_label[1]-1: coord_label[1]+2] = 1
     nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
-    nibabel.save(nii_label_ref, add_suffix(fname_ref, '_labels'))
+    fname_label_ref = add_suffix(fname_ref, '_labels')
+    nibabel.save(nii_label_ref, fname_label_ref)
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
@@ -163,25 +166,25 @@ def main():
                 # have the same qform...).
                 fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
                 shutil.copy(fname_mag_echo, fname_mag_src)
-                run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_mag_src))
+                run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_mag_src))
                 # bring label to proper folder and update header
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
                 fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
                 if os.path.exists(fname_label_src):
                     fname_label = Path(input_folders[0], add_suffix(file_mag, SUFFIXLABEL+SUFFIXMODIFHEADER))
                     shutil.copy(fname_label_src, fname_label)
-                    run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_label))
+                    run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_label))
                     # Label-based registration
                     fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
                     run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
                         fname_label_ref, fname_label, fname_affine))
                     # Apply transformation (only for debugging purpose)
                     run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t {}'.format(
-                        fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
+                        fname_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
                     # Affine registration
                     fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
                     run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -o [ {} , {} ] -v'.format(
-                        fname_affine, fname_mag_ref, fname_mag_src, fname_mag_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
+                        fname_affine, fname_ref, fname_mag_src, fname_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
                     # apply inverse transformation to ref_mask
                     # TODO
                     # Convert to jpg for easy QC
@@ -195,7 +198,7 @@ def main():
                 else:
                     print("Label does not exist. Skipping this subject.")
     # Also convert the reference image
-    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
+    run_subprocess('ConvertToJpg {} {}'.format(fname_ref, fname_ref.replace('nii.gz', 'jpg')))
     # Create gif
     file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     creategif(glob.glob(os.path.join(input_folders[0], '*echo*_reg.jpg')), file_gif, duration=0.3)
