@@ -1,4 +1,4 @@
-FROM continuumio/anaconda
+FROM continuumio/anaconda3
 
 RUN cd $HOME;\
     git clone https://github.com/rrsg2020/analysis ; \
