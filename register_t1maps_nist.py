@@ -10,6 +10,8 @@ import argparse
 import glob
 import datetime
 from PIL import Image, ImageFont, ImageDraw
+import wget
+import zipfile
 
 from gifmaker.gifmaker import creategif
 
@@ -53,6 +55,22 @@ def add_suffix(fname, suffix):
 
     stem, ext = _splitext(fname)
     return os.path.join(stem + suffix + ext)
+
+
+def download_roi(url='https://osf.io/abfmg/download', folder_out='roi'):
+    """
+    Download ROIs from the internet and extract archive.
+    :param url:
+    :param folder_out:
+    :return: output folder of extracted ROIs
+    """
+    # TODO: do this download outside of this CLI (ie should be part of another "install required data" CLI)
+    print("\nDownloading ROIs...")
+    fname_roi = wget.download(url)
+    with zipfile.ZipFile(fname_roi, 'r') as zip_ref:
+        zip_ref.extractall(folder_out)
+    os.remove(fname_roi)
+    return os.path.abspath(folder_out)
 
 
 def run_subprocess(cmd):
@@ -100,6 +118,9 @@ def main():
     # Load config file for datasets
     with open(config_files[0]) as json_file:
         config_json = json.load(json_file)
+
+    # Download ROIs
+    path_roi = download_roi()
 
     # Get reference image
     fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
