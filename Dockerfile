@@ -13,7 +13,7 @@ RUN adduser --disabled-password \
 WORKDIR $HOME
 USER ${USER}
 
-RUN cd $HOME;\
-    git clone https://github.com/rrsg2020/analysis ; \
-    cd analysis;\
+RUN cd $HOME;   \
+    git clone https://github.com/rrsg2020/analysis ;    \
+    cd analysis;   \
     pip install -r requirements.txt
