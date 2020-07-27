@@ -9,6 +9,8 @@ import subprocess
 import argparse
 import glob
 import datetime
+import nibabel
+import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 import wget
 import zipfile
@@ -123,11 +125,16 @@ def main():
     path_roi = download_roi()
 
     # Get reference image
-    fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
-    fname_mag_ref = extract_volume(fname_mag_ref, NUM_ECHO)
-    fname_label_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_labels.nii.gz')
-    # Uncomment to use a mask for registration
-    # fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
+    fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
+    nii_ref = nibabel.load(fname_ref)
+    # Create labels on ref image
+    data_ref_label = np.zeros_like(nii_ref.get_fdata())
+    # TODO: move the hard-coded part below somewhere else
+    coord_labels = [(95, 154), (39, 77), (151, 77)]
+    for coord_label in coord_labels:
+        data_ref_label[coord_label] = 1
+    nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
+    nibabel.save(nii_label_ref, add_suffix(fname_ref, '_labels'))
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
