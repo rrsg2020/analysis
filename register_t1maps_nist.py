@@ -130,11 +130,14 @@ def main():
     # Create labels on ref image and save as nifti file
     data_ref_label = np.zeros_like(nii_ref.get_fdata())
     # TODO: move the hard-coded part below somewhere else
-    coord_labels = [(95, 154), (39, 77), (151, 77)]
-    for coord_label in coord_labels:
+    coord_labels = {
+        1: (95, 154),
+        2: (39, 77),
+        3: (151, 77)}
+    for value, coord in coord_labels.items():
         # Here, instead of creating single-point label, we create 3x3 labels. More details here:
         #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
-        data_ref_label[coord_label[0]-1: coord_label[0]+2, coord_label[1]-1: coord_label[1]+2] = 1
+        data_ref_label[coord[0]-1: coord[0]+2, coord[1]-1: coord[1]+2] = value
     nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
     fname_label_ref = add_suffix(fname_ref, '_labels')
     nibabel.save(nii_label_ref, fname_label_ref)
