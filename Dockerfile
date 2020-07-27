@@ -72,6 +72,31 @@ RUN apt remove cmake;\
 
 RUN apt-get install zlib1g-dev
 
+#------------------
+# Install Miniconda
+#------------------
+ENV CONDA_DIR=/opt/conda \
+    PATH=/opt/conda/bin:$PATH
+RUN echo "Downloading Miniconda installer ..." \
+    && miniconda_installer=/tmp/miniconda.sh \
+    && curl -sSL --retry 5 -o $miniconda_installer https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && /bin/bash $miniconda_installer -b -p $CONDA_DIR \
+    && rm -f $miniconda_installer \
+    && conda config --system --prepend channels conda-forge \
+    && conda config --system --set auto_update_conda false \
+    && conda config --system --set show_channel_urls true \
+    && conda clean -tipsy && sync
+
+#-------------------------
+# Create conda environment
+#-------------------------
+RUN conda create -y -q --name neuro python=3.7 \
+                                    traits \
+    && sync && conda clean -tipsy && sync \
+    && /bin/bash -c "source activate neuro \
+      && pip install -q --no-cache-dir nipype" \
+    && sync
+
 # create user with a home directory
 ARG NB_USER
 ARG NB_UID
@@ -97,4 +122,5 @@ RUN cd $HOME;\
     echo 'PATH=${ANTSPATH}:$PATH' >> ~/.bashrc ;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
-    chmod +777 register_t1maps_nist.sh
+    pip install -r requirements.txt
+    #chmod +777 register_t1maps_nist.sh
