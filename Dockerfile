@@ -16,4 +16,5 @@ USER ${USER}
 RUN cd $HOME;   \
     git clone https://github.com/rrsg2020/analysis ;    \
     cd analysis;   \
+    git checkout mb/docker-test; \
     pip install -r requirements.txt
