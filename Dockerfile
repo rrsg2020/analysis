@@ -36,5 +36,5 @@ RUN apt-get update && \
 RUN cd $HOME;\
     git clone https://github.com/rrsg2020/analysis ; \
     cd analysis;\
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
    
