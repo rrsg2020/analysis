@@ -167,19 +167,12 @@ def main():
                 # the ref image), causing the label-based transformation to fail. For this
                 # reason, we need to copy header information from the ref image to the
                 # moving image.
-                # Note: I've also tried flipping the image and labels using PermuteFlipImageOrientationAxes
-                # but for some reasons i do not understand, the flipping does not produce
-                # the same qform between the output image and labels (even though the inputs
-                # have the same qform...).
-
+                # TODO: create a function for header copy
                 nii_src = nibabel.load(fname_mag_echo)
                 nii_ref = nibabel.load(fname_ref)
                 nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
                 fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
                 nibabel.save(nii_src_in_ref, fname_mag_src)
-
-                # shutil.copy(fname_mag_echo, fname_mag_src)
-                # run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_mag_src))
                 # bring label to proper folder and update header
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
                 fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
@@ -188,10 +181,6 @@ def main():
                     nii_src = nibabel.load(fname_label_src)
                     nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
                     nibabel.save(nii_src_in_ref, fname_label)
-
-                    # shutil.copy(fname_label_src, fname_label)
-                    # run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_label))
-
                     # Label-based registration
                     fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
                     run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
