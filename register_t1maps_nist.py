@@ -19,8 +19,11 @@ from gifmaker.gifmaker import creategif
 # TODO: add verbose mode
 # TODO: make it possible to apply transformations to a specific echo (for easier visual QC)
 
+FILEROIREF = 'T1_ROI_ones_192x192.nii'  # file of ROI used as target for registration
+FILEROIFINAL = 'T1_ROI_ids_192x192_maskedEdges.nii'  # file of ROI to warp to T1map native space
 SUFFIXMODIFHEADER = '_modifheader'
 SUFFIXLABEL = '_T1map_labels'
+SUFFIXT1MAP = '_T1map'
 NUM_ECHO = 2  # index of echo to use for registration
 
 
@@ -182,7 +185,7 @@ def main():
     path_roi = download_roi()
 
     # Create labels on the reference image
-    fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
+    fname_ref = Path(path_roi, FILEROIREF)
     fname_label_ref = create_labels(fname_ref)
 
     # Initialize list of jpg file names for constructing the gif at the end
@@ -227,7 +230,13 @@ def main():
                         fname_affine, fname_ref, fname_mag_src, fname_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
                     # Output jpg for QC
                     list_jpg.append(convert_nifti_to_jpeg(fname_mag_src_reg, file_mag))
-                    # TODO: Apply inverse transformation to ref_mask
+                    # Apply inverse transformation to ref_mask
+                    # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
+                    # fname_t1map = copy_header(Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP)), fname_ref)
+                    fname_t1map = Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP))
+                    # Apply inverse transformation of masks to t1map native space
+                    run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t [{},1] -v'.format(
+                        fname_label, Path(path_roi, FILEROIFINAL), add_suffix(fname_t1map, '_mask'), fname_affine))
                 else:
                     print("Label does not exist. Skipping this image.")
     # Also convert the reference image to jpeg and prepend to list of jpg
