@@ -93,12 +93,14 @@ def extract_volume(fname_nii, ivol=0):
     :param ivol: uint: Index of volume to extract
     :return: fname_nii_1stecho: str: file name of 3D nifti file corresponding to the 1st volume
     """
-    run_subprocess('fslsplit {} {} -t'.format(fname_nii, add_suffix(str(fname_nii), '_echo')))
-    # Return file name of the first echo
-    if ivol<10:
-        return add_suffix(str(fname_nii), '_echo000{}'.format(ivol))
-    else:
-        return add_suffix(str(fname_nii), '_echo00{}'.format(ivol))
+    nii = nibabel.load(fname_nii)
+    if not nii.ndim == 4:
+        raise ValueError("Input file is not 4d: {}".format(fname_nii))
+
+    nii_3d = nibabel.Nifti1Image(nii.get_fdata()[:, :, :, ivol], nii.affine)
+    fname_out = add_suffix(fname_nii, '_echo{}'.format(ivol))
+    nibabel.save(nii_3d, fname_out)
+    return fname_out
 
 
 def main():
@@ -128,12 +130,14 @@ def main():
     fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
     nii_ref = nibabel.load(fname_ref)
     # Create labels on ref image and save as nifti file
+    # See label definition: https://github.com/rrsg2020/analysis/pull/2#issue-427450135
     data_ref_label = np.zeros_like(nii_ref.get_fdata())
     # TODO: move the hard-coded part below somewhere else
     coord_labels = {
-        1: (95, 154),
-        2: (39, 77),
-        3: (151, 77)}
+        1: (39, 77),
+        2: (95, 154),
+        3: (151, 77),
+    }
     for value, coord in coord_labels.items():
         # Here, instead of creating single-point label, we create 3x3 labels. More details here:
         #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
@@ -167,16 +171,27 @@ def main():
                 # but for some reasons i do not understand, the flipping does not produce
                 # the same qform between the output image and labels (even though the inputs
                 # have the same qform...).
+
+                nii_src = nibabel.load(fname_mag_echo)
+                nii_ref = nibabel.load(fname_ref)
+                nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
                 fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
-                shutil.copy(fname_mag_echo, fname_mag_src)
-                run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_mag_src))
+                nibabel.save(nii_src_in_ref, fname_mag_src)
+
+                # shutil.copy(fname_mag_echo, fname_mag_src)
+                # run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_mag_src))
                 # bring label to proper folder and update header
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
                 fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
                 if os.path.exists(fname_label_src):
                     fname_label = Path(input_folders[0], add_suffix(file_mag, SUFFIXLABEL+SUFFIXMODIFHEADER))
-                    shutil.copy(fname_label_src, fname_label)
-                    run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_label))
+                    nii_src = nibabel.load(fname_label_src)
+                    nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
+                    nibabel.save(nii_src_in_ref, fname_label)
+
+                    # shutil.copy(fname_label_src, fname_label)
+                    # run_subprocess('fslcpgeom {} {} -d'.format(fname_ref, fname_label))
+
                     # Label-based registration
                     fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
                     run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
@@ -199,7 +214,7 @@ def main():
                     draw.text((0, 0), file_mag, fill=255)
                     img.save(fname_jpg)
                 else:
-                    print("Label does not exist. Skipping this subject.")
+                    print("Label does not exist. Skipping this image.")
     # Also convert the reference image
     run_subprocess('ConvertToJpg {} {}'.format(fname_ref, fname_ref.replace('nii.gz', 'jpg')))
     # Create gif
