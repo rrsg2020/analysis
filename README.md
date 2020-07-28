@@ -7,7 +7,6 @@
 ### Prerequesites
 
 * [ANTs](https://github.com/ANTsX/ANTs)
-* [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
 * Python 3.7
 * Clone this repository and install its requirements:
   ````bash
