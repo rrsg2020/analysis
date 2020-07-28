@@ -216,7 +216,7 @@ def main():
                 else:
                     print("Label does not exist. Skipping this image.")
     # Also convert the reference image
-    run_subprocess('ConvertToJpg {} {}'.format(fname_ref, fname_ref.replace('nii.gz', 'jpg')))
+    run_subprocess('ConvertToJpg {} {}'.format(fname_ref, fname_ref.as_posix().rstrip('.nii.gz').rstrip('.nii')+'.jpg'))
     # Create gif
     file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     creategif(glob.glob(os.path.join(input_folders[0], '*echo*_reg.jpg')), file_gif, duration=0.3)
