@@ -59,6 +59,46 @@ def add_suffix(fname, suffix):
     return os.path.join(stem + suffix + ext)
 
 
+def copy_header(fname_src, fname_ref):
+    """
+    Copy affine matrix from fname_ref to fname_src. Do _not_ copy image header (which includes pix dimensions).
+    :param fname_src:
+    :param fname_ref:
+    :return: fname_out
+    """
+    nii_src = nibabel.load(fname_src)
+    nii_ref = nibabel.load(fname_ref)
+    nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
+    fname_out = add_suffix(fname_src, SUFFIXMODIFHEADER)
+    nibabel.save(nii_src_in_ref, fname_out)
+    return fname_out
+
+
+def create_labels(fname_ref):
+    """
+    Create labels on ref image and save as nifti file
+    See label definition: https://github.com/rrsg2020/analysis/pull/2#issue-427450135
+    :param fname_ref: reference image to create labels from (e.g. NIST phantom mask)
+    :return: fname_label_ref
+    """
+    # Get reference image
+    nii_ref = nibabel.load(fname_ref)
+    data_ref_label = np.zeros_like(nii_ref.get_fdata())
+    coord_labels = {
+        1: (39, 77),
+        2: (95, 154),
+        3: (151, 77),
+    }
+    for value, coord in coord_labels.items():
+        # Here, instead of creating single-point label, we create 3x3 labels. More details here:
+        #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
+        data_ref_label[coord[0]-1: coord[0]+2, coord[1]-1: coord[1]+2] = value
+    nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
+    fname_label_ref = add_suffix(fname_ref, '_labels')
+    nibabel.save(nii_label_ref, fname_label_ref)
+    return fname_label_ref
+
+
 def download_roi(url='https://osf.io/abfmg/download', folder_out='roi'):
     """
     Download ROIs from the internet and extract archive.
@@ -73,16 +113,6 @@ def download_roi(url='https://osf.io/abfmg/download', folder_out='roi'):
         zip_ref.extractall(folder_out)
     os.remove(fname_roi)
     return os.path.abspath(folder_out)
-
-
-def run_subprocess(cmd):
-    """
-    Wrapper for subprocess.run() that enables to input cmd as a full string (easier for debugging).
-    :param cmd:
-    :return:
-    """
-    print("{}".format(cmd))
-    subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
 
 
 def extract_volume(fname_nii, ivol=0):
@@ -101,6 +131,16 @@ def extract_volume(fname_nii, ivol=0):
     fname_out = add_suffix(fname_nii, '_echo{}'.format(ivol))
     nibabel.save(nii_3d, fname_out)
     return fname_out
+
+
+def run_subprocess(cmd):
+    """
+    Wrapper for subprocess.run() that enables to input cmd as a full string (easier for debugging).
+    :param cmd:
+    :return:
+    """
+    print("{}".format(cmd))
+    subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
 
 
 def main():
@@ -126,25 +166,9 @@ def main():
     # Download ROIs
     path_roi = download_roi()
 
-    # Get reference image
+    # Create labels on the reference image
     fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
-    nii_ref = nibabel.load(fname_ref)
-    # Create labels on ref image and save as nifti file
-    # See label definition: https://github.com/rrsg2020/analysis/pull/2#issue-427450135
-    data_ref_label = np.zeros_like(nii_ref.get_fdata())
-    # TODO: move the hard-coded part below somewhere else
-    coord_labels = {
-        1: (39, 77),
-        2: (95, 154),
-        3: (151, 77),
-    }
-    for value, coord in coord_labels.items():
-        # Here, instead of creating single-point label, we create 3x3 labels. More details here:
-        #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
-        data_ref_label[coord[0]-1: coord[0]+2, coord[1]-1: coord[1]+2] = value
-    nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
-    fname_label_ref = add_suffix(fname_ref, '_labels')
-    nibabel.save(nii_label_ref, fname_label_ref)
+    fname_label_ref = create_labels(fname_ref)
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
@@ -167,20 +191,11 @@ def main():
                 # the ref image), causing the label-based transformation to fail. For this
                 # reason, we need to copy header information from the ref image to the
                 # moving image.
-                # TODO: create a function for header copy
-                nii_src = nibabel.load(fname_mag_echo)
-                nii_ref = nibabel.load(fname_ref)
-                nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
-                fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
-                nibabel.save(nii_src_in_ref, fname_mag_src)
-                # bring label to proper folder and update header
+                fname_mag_src = copy_header(fname_mag_echo, fname_ref)
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
                 fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
                 if os.path.exists(fname_label_src):
-                    fname_label = Path(input_folders[0], add_suffix(file_mag, SUFFIXLABEL+SUFFIXMODIFHEADER))
-                    nii_src = nibabel.load(fname_label_src)
-                    nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
-                    nibabel.save(nii_src_in_ref, fname_label)
+                    fname_label = copy_header(fname_label_src, fname_label_ref)
                     # Label-based registration
                     fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
                     run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
