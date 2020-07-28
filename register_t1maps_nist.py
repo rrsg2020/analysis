@@ -74,6 +74,24 @@ def copy_header(fname_src, fname_ref):
     return fname_out
 
 
+def convert_nifti_to_jpeg(fname_nii, txt=''):
+    """
+    Convert 2D nifti file to jpg image using ANTs' ConvertToJpg
+    :param fname_nii: str: Path to nifti data
+    :param txt: Text to display on the jpg image
+    :return: fname_jpg
+    """
+    # Convert to jpg for easy QC
+    fname_jpg = fname_nii.rstrip('.nii.gz').rstrip('.nii')+'.jpg'
+    run_subprocess('ConvertToJpg {} {}'.format(fname_nii, fname_jpg))
+    # Add name of scan in the image
+    img = Image.open(fname_jpg)
+    draw = ImageDraw.Draw(img)
+    draw.text((0, 0), txt, fill=255)
+    img.save(fname_jpg)
+    return fname_jpg
+
+
 def create_labels(fname_ref):
     """
     Create labels on ref image and save as nifti file
@@ -144,7 +162,6 @@ def run_subprocess(cmd):
 
 
 def main():
-
     # initiate the parser
     parser = argparse.ArgumentParser()
     parser.add_argument("-j", "--json", nargs=1, help="Json file corresponding to the raw (unprocessed) nifti files.")
@@ -169,6 +186,9 @@ def main():
     # Create labels on the reference image
     fname_ref = Path(path_roi, 'T1_ROI_ones_192x192.nii')
     fname_label_ref = create_labels(fname_ref)
+
+    # Initialize list of jpg file names for constructing the gif at the end
+    list_jpg = []
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
@@ -207,24 +227,16 @@ def main():
                     fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
                     run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -o [ {} , {} ] -v'.format(
                         fname_affine, fname_ref, fname_mag_src, fname_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
-                    # apply inverse transformation to ref_mask
-                    # TODO
-                    # Convert to jpg for easy QC
-                    fname_jpg = fname_mag_src_reg.replace('nii.gz', 'jpg')
-                    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_src_reg, fname_jpg))
-                    # Add name of scan in the image
-                    img = Image.open(fname_jpg)
-                    draw = ImageDraw.Draw(img)
-                    draw.text((0, 0), file_mag, fill=255)
-                    img.save(fname_jpg)
+                    # Output jpg for QC
+                    list_jpg.append(convert_nifti_to_jpeg(fname_mag_src_reg, file_mag))
+                    # TODO: Apply inverse transformation to ref_mask
                 else:
                     print("Label does not exist. Skipping this image.")
-    # Also convert the reference image
-    fname_ref_jpg = fname_ref.as_posix().rstrip('.nii.gz').rstrip('.nii')+'.jpg'
-    run_subprocess('ConvertToJpg {} {}'.format(fname_ref, fname_ref_jpg))
+    # Also convert the reference image to jpeg and prepend to list of jpg
+    list_jpg.insert(0, convert_nifti_to_jpeg(fname_ref.as_posix(), txt='Mask'))
     # Create gif
     file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-    creategif([fname_ref_jpg]+glob.glob(os.path.join(input_folders[0], '*echo*_reg.jpg')), file_gif, duration=0.3)
+    creategif(list_jpg, file_gif, duration=0.3)
     print("\nFinished! \n--> {}".format(file_gif))
 
 
