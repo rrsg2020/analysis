@@ -6,7 +6,7 @@
 
 ### Prerequesites
 
-* [ANTs](https://github.com/ANTsX/ANTs)
+* [ANTs](https://github.com/ANTsX/ANTs) (tested with version 2.3.3.dev168-g29bdf)
 * Python 3.7
 * Clone this repository and install its requirements:
   ````bash
