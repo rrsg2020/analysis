@@ -4,14 +4,12 @@ import os
 import sys
 import json
 from pathlib import Path
-import shutil
 import subprocess
 import argparse
-import glob
 import datetime
 import nibabel
 import numpy as np
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageDraw
 import wget
 import zipfile
 
