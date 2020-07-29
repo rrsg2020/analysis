@@ -43,3 +43,10 @@ cm_data = [[0.2081, 0.1663, 0.5292], [0.2116238095, 0.1897809524, 0.5776761905],
  [0.9763, 0.9831, 0.0538]]
 
 parula_map = LinearSegmentedColormap.from_list('parula', cm_data)
+
+def show_gif(fname):
+    import base64
+    from IPython import display
+    with open(fname, 'rb') as fd:
+        b64 = base64.b64encode(fd.read()).decode('ascii')
+    return display.HTML(f'<img src="data:image/gif;base64,{b64}" />')
