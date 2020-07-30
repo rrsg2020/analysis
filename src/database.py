@@ -15,7 +15,8 @@ def create_database(configFile, data_folder_name):
     'phantom version', 'phantom serial number', 'phantom temperature',
     'age', 'sex',
     'sequence name', 'sequence type', 'matrix size', 'resolution', 'dimension', 'TR', 'echo time', 'TI', 'bandwidth',
-    'T1 - genu (WM)', 'T1 - splenium (WM)', 'T1 - deep GM', 'T1 - cortical GM'
+    'T1 - genu (WM)', 'T1 - splenium (WM)', 'T1 - deep GM', 'T1 - cortical GM',
+    'T1 - NIST sphere 1', 'T1 - NIST sphere 2', 'T1 - NIST sphere 3', 'T1 - NIST sphere 4', 'T1 - NIST sphere 5', 'T1 - NIST sphere 6', 'T1 - NIST sphere 7', 'T1 - NIST sphere 8', 'T1 - NIST sphere 9', 'T1 - NIST sphere 10', 'T1 - NIST sphere 11', 'T1 - NIST sphere 12', 'T1 - NIST sphere 13', 'T1 - NIST sphere 14'
     ]
 
     df = pd.DataFrame(columns=columns)
@@ -82,7 +83,7 @@ def parse_t1_json(dataset_series, t1Json):
     else:
         temp = None
     
-    if t1Json['sample']['type'] is 'NIST':
+    if 'NIST' in t1Json['sample']['type']:
         dataset_series.update({
             'sample type': t1Json['sample']['type'],
             'phantom version': t1Json['sample']['version'],
@@ -127,28 +128,45 @@ def parse_t1_json(dataset_series, t1Json):
 
 def parse_rois(dataset_series, t1File, data_folder_name, sample_type):
     
-    if 't1map' in str(t1File):
-        roiFile = str(t1File)
-        roiFile = roiFile.replace('t1map', 'rois')
-    else:
-        roiFile = t1File
-        roiFile = roiFile.replace('T1map', 'rois')
-    
     t1Path = Path(data_folder_name) / t1File
-    roiPath = Path(data_folder_name) / roiFile 
-
     t1 = nib.load(t1Path)
-    roi = nib.load(roiPath)
-    
     t1_data = t1.get_fdata()
-    roi_data = roi.get_fdata()
+    
+    if 'NIST' in sample_type:
+        roi_data = None
+    else:
+        if 't1map' in str(t1File):
+            roiFile = str(t1File)
+            roiFile = roiFile.replace('t1map', 'rois')
+        else:
+            roiFile = t1File
+            roiFile = roiFile.replace('T1map', 'rois')
+            roiPath = Path(data_folder_name) / roiFile 
+            roi = nib.load(roiPath)
+            roi_data = roi.get_fdata()
 
-    if sample_type is 'NIST':
+    if 'NIST' in sample_type:
         dataset_series.update({
             'T1 - genu (WM)': None,
             'T1 - splenium (WM)': None,
             'T1 - deep GM': None,
             'T1 - cortical GM': None,
+        })
+        dataset_series.update({
+            'T1 - NIST sphere 1': None,
+            'T1 - NIST sphere 2': None,
+            'T1 - NIST sphere 3': None,
+            'T1 - NIST sphere 4': None,
+            'T1 - NIST sphere 5': None,
+            'T1 - NIST sphere 6': None,
+            'T1 - NIST sphere 7': None,
+            'T1 - NIST sphere 8': None,
+            'T1 - NIST sphere 9': None,
+            'T1 - NIST sphere 10': None,
+            'T1 - NIST sphere 11': None,
+            'T1 - NIST sphere 12': None,
+            'T1 - NIST sphere 13': None,
+            'T1 - NIST sphere 14': None,
         })
     else:
         roi_1_indexes=np.where(np.isclose(np.squeeze(roi_data),1,atol=0.01))
@@ -161,6 +179,22 @@ def parse_rois(dataset_series, t1File, data_folder_name, sample_type):
             'T1 - splenium (WM)': t1_data[roi_2_indexes],
             'T1 - deep GM': t1_data[roi_3_indexes],
             'T1 - cortical GM': t1_data[roi_4_indexes],
+        })
+        dataset_series.update({
+            'T1 - NIST sphere 1': None,
+            'T1 - NIST sphere 2': None,
+            'T1 - NIST sphere 3': None,
+            'T1 - NIST sphere 4': None,
+            'T1 - NIST sphere 5': None,
+            'T1 - NIST sphere 6': None,
+            'T1 - NIST sphere 7': None,
+            'T1 - NIST sphere 8': None,
+            'T1 - NIST sphere 9': None,
+            'T1 - NIST sphere 10': None,
+            'T1 - NIST sphere 11': None,
+            'T1 - NIST sphere 12': None,
+            'T1 - NIST sphere 13': None,
+            'T1 - NIST sphere 14': None,
         })
 
     return dataset_series
