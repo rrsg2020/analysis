@@ -69,7 +69,8 @@ def copy_header(fname_src, fname_ref):
     """
     nii_src = nibabel.load(fname_src)
     nii_ref = nibabel.load(fname_ref)
-    nii_src_in_ref = nibabel.Nifti1Image(nii_src.get_fdata(), nii_ref.affine, nii_src.header)
+    # Squeeze is needed to enforce 2d image
+    nii_src_in_ref = nibabel.Nifti1Image(np.squeeze(nii_src.get_fdata()), nii_ref.affine, nii_src.header)
     fname_out = add_suffix(fname_src, SUFFIXMODIFHEADER)
     nibabel.save(nii_src_in_ref, fname_out)
     return fname_out
@@ -232,8 +233,8 @@ def main():
                     list_jpg.append(convert_nifti_to_jpeg(fname_mag_src_reg, file_mag))
                     # Apply inverse transformation to ref_mask
                     # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
-                    # fname_t1map = copy_header(Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP)), fname_ref)
-                    fname_t1map = Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP))
+                    fname_t1map = copy_header(Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP)), fname_ref)
+                    # fname_t1map = Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP))
                     # Apply inverse transformation of masks to t1map native space
                     run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t [{},1] -v'.format(
                         fname_label, Path(path_roi, FILEROIFINAL), add_suffix(fname_t1map, '_mask'), fname_affine))
