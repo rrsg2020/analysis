@@ -236,7 +236,7 @@ def main():
                     fname_t1map = copy_header(Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP)), fname_ref)
                     # fname_t1map = Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP))
                     # Apply inverse transformation of masks to t1map native space
-                    run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t [{},1] -v'.format(
+                    run_subprocess('antsApplyTransforms -d 2 -n NearestNeighbor -r {} -i {} -o {} -t [{},1] -v'.format(
                         fname_label, Path(path_roi, FILEROIFINAL), add_suffix(fname_t1map, '_mask'), fname_affine))
                 else:
                     print("Label does not exist. Skipping this image.")
