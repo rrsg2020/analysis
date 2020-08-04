@@ -6,8 +6,7 @@
 
 ### Prerequesites
 
-* [ANTs](https://github.com/ANTsX/ANTs)
-* [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
+* [ANTs](https://github.com/ANTsX/ANTs) (tested with version 2.3.3.dev168-g29bdf)
 * Python 3.7
 * Clone this repository and install its requirements:
   ````bash
@@ -35,16 +34,5 @@ Run the registration script:
 python register_t1maps_nist.py -j configs/3T_NIST.json -p 3T_NIST_pooled/ 3T_NIST_T1maps_pooled/
 ```
 
-Note: you can specify which reference image (aka target) to choose for co-registering all the sites by editing the 
-`configs/.json` file and adding the field `"reference": true`. Example:
-
-```xml
-    "guillaumegilbert_muhc_NIST":{
-        "OSF_link": "https://osf.io/qnhjt/download/",
-        "datasets":{
-            "magnitude": {
-                "dataType": "Magnitude",
-                "imagePath": "20200210_guillaumegilbert_muhc_NIST/20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz",
-                "reference": true
-            },
-```
+Note: the registration script will download the reference mask (e.g. for the NIST phantom)
+and will create labels for the initial affine transformation. 
