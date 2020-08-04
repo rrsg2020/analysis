@@ -4,12 +4,14 @@ import os
 import sys
 import json
 from pathlib import Path
-import shutil
 import subprocess
 import argparse
-import glob
 import datetime
-from PIL import Image, ImageFont, ImageDraw
+import nibabel
+import numpy as np
+from PIL import Image, ImageDraw
+import wget
+import zipfile
 
 from gifmaker.gifmaker import creategif
 
@@ -17,8 +19,11 @@ from gifmaker.gifmaker import creategif
 # TODO: add verbose mode
 # TODO: make it possible to apply transformations to a specific echo (for easier visual QC)
 
+FILEROIREF = 'T1_ROI_ones_192x192.nii'  # file of ROI used as target for registration
+FILEROIFINAL = 'T1_ROI_ids_192x192_maskedEdges.nii'  # file of ROI to warp to T1map native space
 SUFFIXMODIFHEADER = '_modifheader'
 SUFFIXLABEL = '_T1map_labels'
+SUFFIXT1MAP = '_T1map'
 NUM_ECHO = 2  # index of echo to use for registration
 
 
@@ -55,14 +60,79 @@ def add_suffix(fname, suffix):
     return os.path.join(stem + suffix + ext)
 
 
-def run_subprocess(cmd):
+def copy_header(fname_src, fname_ref):
     """
-    Wrapper for subprocess.run() that enables to input cmd as a full string (easier for debugging).
-    :param cmd:
-    :return:
+    Copy affine matrix from fname_ref to fname_src. Do _not_ copy image header (which includes pix dimensions).
+    :param fname_src:
+    :param fname_ref:
+    :return: fname_out
     """
-    print("{}".format(cmd))
-    subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
+    nii_src = nibabel.load(fname_src)
+    nii_ref = nibabel.load(fname_ref)
+    # Squeeze is needed to enforce 2d image
+    nii_src_in_ref = nibabel.Nifti1Image(np.squeeze(nii_src.get_fdata()), nii_ref.affine, nii_src.header)
+    fname_out = add_suffix(fname_src, SUFFIXMODIFHEADER)
+    nibabel.save(nii_src_in_ref, fname_out)
+    return fname_out
+
+
+def convert_nifti_to_jpeg(fname_nii, txt=''):
+    """
+    Convert 2D nifti file to jpg image using ANTs' ConvertToJpg
+    :param fname_nii: str: Path to nifti data
+    :param txt: Text to display on the jpg image
+    :return: fname_jpg
+    """
+    # Convert to jpg for easy QC
+    fname_jpg = fname_nii.rstrip('.nii.gz').rstrip('.nii')+'.jpg'
+    run_subprocess('ConvertToJpg {} {}'.format(fname_nii, fname_jpg))
+    # Add name of scan in the image
+    img = Image.open(fname_jpg)
+    draw = ImageDraw.Draw(img)
+    draw.text((0, 0), txt, fill=255)
+    img.save(fname_jpg)
+    return fname_jpg
+
+
+def create_labels(fname_ref):
+    """
+    Create labels on ref image and save as nifti file
+    See label definition: https://github.com/rrsg2020/analysis/pull/2#issue-427450135
+    :param fname_ref: reference image to create labels from (e.g. NIST phantom mask)
+    :return: fname_label_ref
+    """
+    # Get reference image
+    nii_ref = nibabel.load(fname_ref)
+    data_ref_label = np.zeros_like(nii_ref.get_fdata())
+    coord_labels = {
+        1: (39, 77),
+        2: (95, 154),
+        3: (151, 77),
+    }
+    for value, coord in coord_labels.items():
+        # Here, instead of creating single-point label, we create 3x3 labels. More details here:
+        #  https://github.com/rrsg2020/analysis/issues/1#issuecomment-664495177
+        data_ref_label[coord[0]-1: coord[0]+2, coord[1]-1: coord[1]+2] = value
+    nii_label_ref = nibabel.Nifti1Image(data_ref_label, nii_ref.affine, nii_ref.header.copy())
+    fname_label_ref = add_suffix(fname_ref, '_labels')
+    nibabel.save(nii_label_ref, fname_label_ref)
+    return fname_label_ref
+
+
+def download_roi(url='https://osf.io/abfmg/download', folder_out='roi'):
+    """
+    Download ROIs from the internet and extract archive.
+    :param url:
+    :param folder_out:
+    :return: output folder of extracted ROIs
+    """
+    # TODO: do this download outside of this CLI (ie should be part of another "install required data" CLI)
+    print("\nDownloading ROIs...")
+    fname_roi = wget.download(url)
+    with zipfile.ZipFile(fname_roi, 'r') as zip_ref:
+        zip_ref.extractall(folder_out)
+    os.remove(fname_roi)
+    return os.path.abspath(folder_out)
 
 
 def extract_volume(fname_nii, ivol=0):
@@ -73,16 +143,27 @@ def extract_volume(fname_nii, ivol=0):
     :param ivol: uint: Index of volume to extract
     :return: fname_nii_1stecho: str: file name of 3D nifti file corresponding to the 1st volume
     """
-    run_subprocess('fslsplit {} {} -t'.format(fname_nii, add_suffix(str(fname_nii), '_echo')))
-    # Return file name of the first echo
-    if ivol<10:
-        return add_suffix(str(fname_nii), '_echo000{}'.format(ivol))
-    else:
-        return add_suffix(str(fname_nii), '_echo00{}'.format(ivol))
+    nii = nibabel.load(fname_nii)
+    if not nii.ndim == 4:
+        raise ValueError("Input file is not 4d: {}".format(fname_nii))
+
+    nii_3d = nibabel.Nifti1Image(nii.get_fdata()[:, :, :, ivol], nii.affine)
+    fname_out = add_suffix(fname_nii, '_echo{}'.format(ivol))
+    nibabel.save(nii_3d, fname_out)
+    return fname_out
+
+
+def run_subprocess(cmd):
+    """
+    Wrapper for subprocess.run() that enables to input cmd as a full string (easier for debugging).
+    :param cmd:
+    :return:
+    """
+    print("{}".format(cmd))
+    subprocess.run(cmd.split(' '), stdout=subprocess.PIPE, text=True)
 
 
 def main():
-
     # initiate the parser
     parser = argparse.ArgumentParser()
     parser.add_argument("-j", "--json", nargs=1, help="Json file corresponding to the raw (unprocessed) nifti files.")
@@ -101,12 +182,15 @@ def main():
     with open(config_files[0]) as json_file:
         config_json = json.load(json_file)
 
-    # Get reference image
-    fname_mag_ref = Path(input_folders[0], '20200210_guillaumegilbert_muhc_NIST_Magnitude.nii.gz')
-    fname_mag_ref = extract_volume(fname_mag_ref, NUM_ECHO)
-    fname_label_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_labels.nii.gz')
-    # Uncomment to use a mask for registration
-    # fname_mask_ref = Path(input_folders[1], '20200210_guillaumegilbert_muhc_NIST_Magnitude_T1map_mask.nii.gz')
+    # Download ROIs
+    path_roi = download_roi()
+
+    # Create labels on the reference image
+    fname_ref = Path(path_roi, FILEROIREF)
+    fname_label_ref = create_labels(fname_ref)
+
+    # Initialize list of jpg file names for constructing the gif at the end
+    list_jpg = []
 
     # Loop across submitters (aka sites)
     for submitter in config_json.keys():
@@ -129,48 +213,38 @@ def main():
                 # the ref image), causing the label-based transformation to fail. For this
                 # reason, we need to copy header information from the ref image to the
                 # moving image.
-                # Note: I've also tried flipping the image and labels using PermuteFlipImageOrientationAxes
-                # but for some reasons i do not understand, the flipping does not produce
-                # the same qform between the output image and labels (even though the inputs
-                # have the same qform...).
-                fname_mag_src = add_suffix(fname_mag_echo, SUFFIXMODIFHEADER)
-                shutil.copy(fname_mag_echo, fname_mag_src)
-                run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_mag_src))
-                # bring label to proper folder and update header
+                fname_mag_src = copy_header(fname_mag_echo, fname_ref)
                 # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
                 fname_label_src = Path(input_folders[1], add_suffix(file_mag, SUFFIXLABEL))
                 if os.path.exists(fname_label_src):
-                    fname_label = Path(input_folders[0], add_suffix(file_mag, SUFFIXLABEL+SUFFIXMODIFHEADER))
-                    shutil.copy(fname_label_src, fname_label)
-                    run_subprocess('fslcpgeom {} {} -d'.format(fname_mag_ref, fname_label))
+                    fname_label = copy_header(fname_label_src, fname_label_ref)
                     # Label-based registration
                     fname_affine = Path(input_folders[0], str(file_mag).replace('Magnitude.nii.gz', 'Magnitude_affine-label.mat'))
                     run_subprocess('antsLandmarkBasedTransformInitializer 2 {} {} affine {}'.format(
                         fname_label_ref, fname_label, fname_affine))
                     # Apply transformation (only for debugging purpose)
                     run_subprocess('antsApplyTransforms -d 2 -r {} -i {} -o {} -t {}'.format(
-                        fname_mag_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
+                        fname_ref, fname_mag_src, add_suffix(fname_mag_src, '_reg-labelbased'), fname_affine))
                     # Affine registration
                     fname_mag_src_reg = add_suffix(fname_mag_src, '_reg')
                     run_subprocess('antsRegistration -d 2 -r {} -t Affine[0.1] -m CC[ {} , {} ] -c 100x100x100 -s 0x0x0 -f 4x2x1 -t BSplineSyN[0.5, 3] -m CC[ {} , {} ] -c 50x50x10 -s 0x0x0 -f 4x2x1 -o [ {} , {} ] -v'.format(
-                        fname_affine, fname_mag_ref, fname_mag_src, fname_mag_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
-                    # apply inverse transformation to ref_mask
-                    # TODO
-                    # Convert to jpg for easy QC
-                    fname_jpg = fname_mag_src_reg.replace('nii.gz', 'jpg')
-                    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_src_reg, fname_jpg))
-                    # Add name of scan in the image
-                    img = Image.open(fname_jpg)
-                    draw = ImageDraw.Draw(img)
-                    draw.text((0, 0), file_mag, fill=255)
-                    img.save(fname_jpg)
+                        fname_affine, fname_ref, fname_mag_src, fname_ref, fname_mag_src, fname_mag_src.replace('.nii.gz', '_'), fname_mag_src_reg))
+                    # Output jpg for QC
+                    list_jpg.append(convert_nifti_to_jpeg(fname_mag_src_reg, file_mag))
+                    # Apply inverse transformation to ref_mask
+                    # Here: assuming that T1maps have the same prefix as the file under 3T_NIST
+                    fname_t1map = copy_header(Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP)), fname_ref)
+                    # fname_t1map = Path(input_folders[1], add_suffix(file_mag, SUFFIXT1MAP))
+                    # Apply inverse transformation of masks to t1map native space
+                    run_subprocess('antsApplyTransforms -d 2 -n NearestNeighbor -r {} -i {} -o {} -t [{},1] -v'.format(
+                        fname_label, Path(path_roi, FILEROIFINAL), add_suffix(fname_t1map, '_mask'), fname_affine))
                 else:
-                    print("Label does not exist. Skipping this subject.")
-    # Also convert the reference image
-    run_subprocess('ConvertToJpg {} {}'.format(fname_mag_ref, fname_mag_ref.replace('nii.gz', 'jpg')))
+                    print("Label does not exist. Skipping this image.")
+    # Also convert the reference image to jpeg and prepend to list of jpg
+    list_jpg.insert(0, convert_nifti_to_jpeg(fname_ref.as_posix(), txt='Mask'))
     # Create gif
     file_gif = 'results_reg_{}.gif'.format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
-    creategif(glob.glob(os.path.join(input_folders[0], '*echo*_reg.jpg')), file_gif, duration=0.3)
+    creategif(list_jpg, file_gif, duration=0.3)
     print("\nFinished! \n--> {}".format(file_gif))
 
 
