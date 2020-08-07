@@ -1,7 +1,20 @@
 import numpy as np
 
-def get_reference_NIST_values(version):
-    if version<42:
+def get_reference_NIST_values(serial_number):
+    '''get_reference_NIST_values
+    Get the reference T1 values for the CaliberMRI/NIST values of the T1 plate
+    at 20C.
+
+    The CaliberMRI/NIST quantitative MRI phantom has two versions, version 1 is
+    for serial numbers <0042 and version 2 is for serial numbers >=0042.
+
+    T1 values are in ms.
+
+    The values for version 1 are from: https://app.box.com/s/sqeuvq6uqbgx8ixa6mcp37nbrcpndwwm
+    The values for version 2 are from an internal email with CaliberMRI, which they stated will be released
+    in a new technical specifications document on their website near the end of August 2020.
+    '''
+    if serial_number<42:
         return np.array([
             1989,
             1454,
@@ -20,18 +33,18 @@ def get_reference_NIST_values(version):
         ])
     else:
         return np.array([
-            1838,
-            1398,
-            998.3,
-            725.8,
-            509.1,
-            367.0,
-            258.7,
-            184.7,
-            130.8,
-            90.9,
-            64.2,
-            46.28,
-            32.65,
-            22.95
+            1883.97,
+            1330.16,
+            987.27,
+            690.08,
+            484.97,
+            341.58,
+            240.86,
+            174.95,
+            121.08,
+            85.75,
+            60.21,
+            42.89,
+            30.40,
+            21.44
         ])   
