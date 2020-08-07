@@ -48,3 +48,22 @@ def get_reference_NIST_values(serial_number):
             30.40,
             21.44
         ])   
+
+def get_NIST_ids():
+    ids = [
+        'T1 - NIST sphere 1',
+        'T1 - NIST sphere 2',
+        'T1 - NIST sphere 3',
+        'T1 - NIST sphere 4',
+        'T1 - NIST sphere 5',
+        'T1 - NIST sphere 6',
+        'T1 - NIST sphere 7',
+        'T1 - NIST sphere 8',
+        'T1 - NIST sphere 9',
+        'T1 - NIST sphere 10',
+        'T1 - NIST sphere 11',
+        'T1 - NIST sphere 12',
+        'T1 - NIST sphere 13',
+        'T1 - NIST sphere 14',
+    ]
+    return ids
