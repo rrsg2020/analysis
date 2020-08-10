@@ -1,6 +1,6 @@
 # Analysis
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rrsg2020/analysis/master?filepath=generate_database.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rrsg2020/analysis/master?filepath=analysis%2Fgenerate_database.ipynb)
 
 ## Registering images
 
