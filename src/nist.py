@@ -93,25 +93,37 @@ def temperature_correction(input_temperature):
     sphere = list(phantom_v2.keys());
     temperature = list(phantom_v2['1'].keys());
 
-    #Define array (data2fit) to store data to be fitted
-    data2fit = np.empty([len(temperature),len(sphere)+1]);
-    #Fill data2fit array
-    row = 0;
-    for i in temperature:
-        row = row + 1;
-        data2fit[row-1,0] = int(i);
-        for j in sphere:
-            T1_value = float(phantom_v2[j][i]);
-            data2fit[row-1,int(j)] = T1_value;
-        
-
+    input_temperature = np.asarray(input_temperature);
     ##Code for Temperature Correction: Interpolation##
-    estimatedT1_values = np.empty([len(sphere)]);
-    outDic_T1values = {};
+    #Cubic Spline
+    cs_estimatedT1_values = np.empty([len(input_temperature),len(sphere)]);
+    cs_outDic_T1values = {};
+    
+    #Cubic
+    c_estimatedT1_values = np.empty([len(input_temperature),len(sphere)]);
+    c_outDic_T1values = {};
     #Interpolations
     for k in range(len(sphere)):
-        f_cubic = interpolate.interp1d(data2fit[:,0], data2fit[:,k+1], kind='cubic');
-        estimatedT1_values[k] = f_cubic(input_temperature);
-        outDic_T1values[k+1] = estimatedT1_values[k];
+        for l in range(len(input_temperature)):
+            f_cubicSpline = interpolate.splrep(data2fit[:,0], data2fit[:,k+1]);
+            cs_estimatedT1_values[l,k] = interpolate.splev(input_temperature[l],f_cubicSpline);
+            cs_outDic_T1values[l,k+1] = cs_estimatedT1_values[l,k];
         
-    return outDic_T1values, estimatedT1_values;
+            f_cubic = interpolate.interp1d(data2fit[:,0], data2fit[:,k+1], kind='cubic');
+            c_estimatedT1_values[l,k] = f_cubic(input_temperature[l]);
+            c_outDic_T1values[l,k+1] = c_estimatedT1_values[l,k];
+    
+    #Interpolation of data for Sphere No. 1 only
+    plt.plot(data2fit[:,0], data2fit[:,1], 'o')
+    plt.plot(data2fit[:,0], cs_estimatedT1_values[:,0], '--');
+    plt.plot(data2fit[:,0], c_estimatedT1_values[:,0], '-*');
+    plt.legend(['data', 'cubic-spline', 'cubic'], loc='best');
+    plt.title('Interpolation: Sphere No. 1');
+    plt.xlabel('Temperature (°C)');
+    plt.ylabel('T1 value (ms)')
+    plt.show()
+        
+    return cs_outDic_T1values, cs_estimatedT1_values, c_outDic_T1values, c_estimatedT1_values;
+
+#Call function with an array of temperatures as input_temperature.
+temperature_correction(np.arange(16,28,2))
