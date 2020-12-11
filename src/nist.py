@@ -105,7 +105,14 @@ def temperature_correction(input_temperature):
             data[row-1,int(j)] = T1_value;
 
     ##Code for Temperature Correction: Interpolation##
-    input_temperature = np.asarray(input_temperature);
+    #If input_temperature is a scalar:
+    #Validate input_temperature
+    validTemperature = lambda input_temperature: np.isscalar(input_temperature);
+    if validTemperature(input_temperature) == True:
+        input2array = input_temperature;
+        input_temperature = np.arange(1);
+        input_temperature[0] = input2array;
+    
     
     #Cubic Spline (define output as array and dictionary)
     spline_estimatedT1 = np.empty([len(input_temperature),len(sphereID)]);
@@ -128,18 +135,16 @@ def temperature_correction(input_temperature):
             cubic_estimatedT1[l,k] = cubic(input_temperature[l]);
             cubic_estimatedT1_dictionary[l,k+1] = cubic_estimatedT1[l,k];
     
-    import matplotlib.pyplot as plt
-    #Interpolation of data for Sphere No. 1 only
-    plt.plot(data[:,0], data[:,1], 'o')
-    plt.plot(data[:,0], spline_estimatedT1[:,0], '--');
-    plt.plot(data[:,0], cubic_estimatedT1[:,0], '-*');
-    plt.legend(['data', 'cubic-spline', 'cubic'], loc='best');
-    plt.title('Interpolation: Sphere No. 1');
-    plt.xlabel('Temperature (°C)');
-    plt.ylabel('T1 value (ms)')
-    plt.show()
+
         
     return spline_estimatedT1_dictionary, spline_estimatedT1, cubic_estimatedT1_dictionary, cubic_estimatedT1;
 
-#Call function with an array of temperatures as input_temperature.
-temperature_correction(np.arange(16,28,2))
+#Call function with an array of temperatures as input_temperature
+#input_temperature = np.arange(16,28,2);
+    
+#Call function with a single temperature value as input_temperature
+input_temperature = 19.8;
+
+temperature_correction(input_temperature)
+
+
