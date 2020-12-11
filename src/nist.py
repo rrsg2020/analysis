@@ -139,10 +139,10 @@ def temperature_correction(input_temperature):
         
     return spline_estimatedT1_dictionary, spline_estimatedT1, cubic_estimatedT1_dictionary, cubic_estimatedT1;
 
-#Call function with an array of temperatures as input_temperature
+#Call function with an array of temperature values as input_temperature
 #input_temperature = np.arange(16,28,2);
     
-#Call function with a single temperature value as input_temperature
+#Call function with one temperature value as input_temperature
 input_temperature = 19.8;
 
 temperature_correction(input_temperature)
