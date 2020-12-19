@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import interpolate
+import matplotlib.pyplot as plt
 
 def get_reference_NIST_values(serial_number):
     '''get_reference_NIST_values
@@ -69,82 +70,91 @@ def get_NIST_ids():
     ]
     return ids
 
-def temperature_correction(input_temperature):
-    #Dictionary of data
-    phantom_v2 = {
-        '14': {'16': '21.94', '18': '21.62','20': '21.44', '22': '21.28', '24': '21.26', '26': '21.31'},
-        '13': {'16': '31.05', '18': '30.65','20': '30.40', '22': '30.27', '24': '30.25', '26': '30.31'},
-        '12': {'16': '43.79', '18': '43.24','20': '42.89', '22': '42.72', '24': '42.70', '26': '42.80'},
-        '11': {'16': '61.49', '18': '60.70','20': '60.21', '22': '59.97', '24': '60.00', '26': '60.17'},
-        '10': {'16': '87.47', '18': '86.41','20': '85.75', '22': '85.03', '24': '85.01', '26': '85.28'},
-        '9': {'16': '122.99', '18': '121.79','20': '121.08', '22': '120.80', '24': '120.90', '26': '121.34'},
-        '8': {'16': '177.68', '18': '175.94','20': '174.95', '22': '174.59', '24': '174.78', '26': '175.48'},
-        '7': {'16': '243.77', '18': '241.84','20': '240.86', '22': '240.75', '24': '241.31', '26': '242.45'},
-        '6': {'16': '343.00', '18': '341.53','20': '341.58', '22': '342.58', '24': '344.23', '26': '346.67'},
-        '5': {'16': '483.91', '18': '482.91','20': '484.97', '22': '486.92', '24': '490.24', '26': '494.55'},
-        '4': {'16': '675.07', '18': '686.88','20': '690.08', '22': '695.01', '24': '701.06', '26': '709.48'},
-        '3': {'16': '950.71', '18': '963.56','20': '987.27', '22': '1000.81', '24': '1015.70', '26': '1030.78'},
-        '2': {'16': '1274.07', '18': '1317.71','20': '1330.16', '22': '1355.29', '24': '1367.79', '26': '1395.94'},
-        '1': {'16': '1766.68', '18': '1830.34','20': '1883.97', '22': '1937.34', '24': '1987.50', '26': '2066.95'}
-        };
+def temperature_correction(input_temperature,serial_number,interpolation='cubic-spline'):
+    if serial_number>=42:
+        #Dictionary of data
+        phantom_v2 = {
+            '14': {'16': '21.94', '18': '21.62','20': '21.44', '22': '21.28', '24': '21.26', '26': '21.31'},
+            '13': {'16': '31.05', '18': '30.65','20': '30.40', '22': '30.27', '24': '30.25', '26': '30.31'},
+            '12': {'16': '43.79', '18': '43.24','20': '42.89', '22': '42.72', '24': '42.70', '26': '42.80'},
+            '11': {'16': '61.49', '18': '60.70','20': '60.21', '22': '59.97', '24': '60.00', '26': '60.17'},
+            '10': {'16': '87.47', '18': '86.41','20': '85.75', '22': '85.03', '24': '85.01', '26': '85.28'},
+            '9': {'16': '122.99', '18': '121.79','20': '121.08', '22': '120.80', '24': '120.90', '26': '121.34'},
+            '8': {'16': '177.68', '18': '175.94','20': '174.95', '22': '174.59', '24': '174.78', '26': '175.48'},
+            '7': {'16': '243.77', '18': '241.84','20': '240.86', '22': '240.75', '24': '241.31', '26': '242.45'},
+            '6': {'16': '343.00', '18': '341.53','20': '341.58', '22': '342.58', '24': '344.23', '26': '346.67'},
+            '5': {'16': '483.91', '18': '482.91','20': '484.97', '22': '486.92', '24': '490.24', '26': '494.55'},
+            '4': {'16': '675.07', '18': '686.88','20': '690.08', '22': '695.01', '24': '701.06', '26': '709.48'},
+            '3': {'16': '950.71', '18': '963.56','20': '987.27', '22': '1000.81', '24': '1015.70', '26': '1030.78'},
+            '2': {'16': '1274.07', '18': '1317.71','20': '1330.16', '22': '1355.29', '24': '1367.79', '26': '1395.94'},
+            '1': {'16': '1766.68', '18': '1830.34','20': '1883.97', '22': '1937.34', '24': '1987.50', '26': '2066.95'}
+            };
     
-    ##Get keys and values of dictionary to construct a 2D array##
-    #Get dictionary keys as lists
-    sphereID = list(phantom_v2.keys());
-    temperature = list(phantom_v2['1'].keys());
+        ##Get keys and values of dictionary to construct a 2D array##
+        #Get dictionary keys as lists
+        sphereID = list(phantom_v2.keys());
+        temperature = list(phantom_v2['1'].keys());
     
-    #Define array (data) to store data for interpolation
-    data = np.empty([len(temperature),len(sphereID)+1]);
-    #Fill data array
-    row = 0;
-    for i in temperature:
-        row = row + 1;
-        data[row-1,0] = int(i);
-        for j in sphereID:
-            T1_value = float(phantom_v2[j][i]);
-            data[row-1,int(j)] = T1_value;
+        #Define array (data) to store data for interpolation
+        data = np.empty([len(temperature),len(sphereID)+1]);
+        #Fill data array
+        row = 0;
+        for i in temperature:
+            row = row + 1;
+            data[row-1,0] = int(i);
+            for j in sphereID:
+                T1_value = float(phantom_v2[j][i]);
+                data[row-1,int(j)] = T1_value;
 
-    ##Code for Temperature Correction: Interpolation##
-    #If input_temperature is a scalar:
-    #Validate input_temperature
-    validTemperature = lambda input_temperature: np.isscalar(input_temperature);
-    if validTemperature(input_temperature) == True:
-        input2array = input_temperature;
-        input_temperature = np.arange(1);
-        input_temperature[0] = input2array;
+        ##Code for Temperature Correction: Interpolation##
+        #If input_temperature is a scalar:
+        #Validate input_temperature
+        validTemperature = lambda input_temperature: np.isscalar(input_temperature);
+        if validTemperature(input_temperature) == True:
+            input2array = input_temperature;
+            input_temperature = np.arange(1);
+            input_temperature[0] = input2array;
     
     
-    #Cubic Spline (define output as array and dictionary)
-    spline_estimatedT1 = np.empty([len(input_temperature),len(sphereID)]);
-    spline_estimatedT1_dictionary = {};
+        #Cubic Spline (define output as array and dictionary)
+        spline_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
+        spline_estimatedT1_dictionary = {};
     
-    #Cubic (define output as array and dictionary)
-    cubic_estimatedT1 = np.empty([len(input_temperature),len(sphereID)]);
-    cubic_estimatedT1_dictionary = {};
-    
-    #Interpolations
-    for k in range(len(sphereID)):
-        for l in range(len(input_temperature)):
-            #Cubic Spline
-            cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
-            spline_estimatedT1[l,k] = interpolate.splev(input_temperature[l],cubicSpline);
-            spline_estimatedT1_dictionary[l,k+1] = spline_estimatedT1[l,k];
-            
-            #Cubic        
-            cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic');
-            cubic_estimatedT1[l,k] = cubic(input_temperature[l]);
-            cubic_estimatedT1_dictionary[l,k+1] = cubic_estimatedT1[l,k];
-    
-
+        #Cubic (define output as array and dictionary)
+        cubic_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
+        cubic_estimatedT1_dictionary = {};
         
-    return spline_estimatedT1_dictionary, spline_estimatedT1, cubic_estimatedT1_dictionary, cubic_estimatedT1;
+        outputArray = np.empty([len(sphereID),len(input_temperature)]);
+        
+        #Interpolations
+        for k in range(len(sphereID)):
+            for l in range(len(input_temperature)):
+                if interpolation=='cubic-spline':
+                    #Cubic Spline
+                    cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
+                    spline_estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline);
+                    spline_estimatedT1_dictionary[l,k+1] = spline_estimatedT1[k,l];
+                    #outputArray[k,l] = spline_estimatedT1[l,k];
+                    outputArray = spline_estimatedT1;
+                elif interpolation=='cubic':
+                    #Cubic        
+                    cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic');
+                    cubic_estimatedT1[k,l] = cubic(input_temperature[l]);
+                    cubic_estimatedT1_dictionary[l,k+1] = cubic_estimatedT1[k,l];
+                    #outputArray[k,l] = cubic_estimatedT1[l,k];
+                    outputArray = cubic_estimatedT1;
+                else:
+                    print('Invalid interpolation (choose from "cubic-spline" (default), "cubic"')
+                    return None
+        
+        return outputArray
+                    
+    else:
+        print('Warning! Undefined functionality.')
+        return None
 
-#Call function with an array of temperature values as input_temperature
-#input_temperature = np.arange(16,28,2);
-    
-#Call function with one temperature value as input_temperature
-input_temperature = 19.8;
 
-temperature_correction(input_temperature)
+
+
 
 
