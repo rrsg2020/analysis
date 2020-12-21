@@ -153,6 +153,17 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
         print('Warning! Undefined functionality.')
         return None
 
+def test_inputTemperature():
+    testTemperature = temperature_correction(20,42);
+    assert  round(float(testTemperature[0]),2) == 1883.97
+    
+def test_formatArray():
+    testArray = temperature_correction(20,42);
+    assert np.shape(testArray) == (14,1)
+    assert isinstance(testArray,np.ndarray) == True
+
+
+
 
 
 
