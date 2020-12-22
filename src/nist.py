@@ -154,18 +154,6 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
         print('Warning! Undefined functionality.')
         return None
 
-def test_inputTemperature():
-    sphere = 1;
-    temperature = 20;
-    testTemperature = temperature_correction(temperature,42);
-    testTemperature = round(float(testTemperature[sphere-1]),2);
-    referenceTemperature = float(phantom_v2.get(str(sphere),{}).get(str(temperature)));
-    assert  testTemperature == referenceTemperature
-    
-def test_formatArray():
-    testArray = temperature_correction(20,42);
-    assert np.shape(testArray) == (len(phantom_v2),1)
-    assert isinstance(testArray,np.ndarray) == True
 
 
 
