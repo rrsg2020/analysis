@@ -73,7 +73,6 @@ def get_NIST_ids():
 def temperature_correction(input_temperature,serial_number,interpolation='cubic-spline'):
     if serial_number>=42:
         #Dictionary of data
-        global phantom_v2;
         phantom_v2 = {
             '14': {'16': '21.94', '18': '21.62','20': '21.44', '22': '21.28', '24': '21.26', '26': '21.31'},
             '13': {'16': '31.05', '18': '30.65','20': '30.40', '22': '30.27', '24': '30.25', '26': '30.31'},
@@ -154,18 +153,6 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
         print('Warning! Undefined functionality.')
         return None
 
-def test_inputTemperature():
-    sphere = 1;
-    temperature = 20;
-    testTemperature = temperature_correction(temperature,42);
-    testTemperature = round(float(testTemperature[sphere-1]),2);
-    referenceTemperature = float(phantom_v2.get(str(sphere),{}).get(str(temperature)));
-    assert  testTemperature == referenceTemperature
-    
-def test_formatArray():
-    testArray = temperature_correction(20,42);
-    assert np.shape(testArray) == (len(phantom_v2),1)
-    assert isinstance(testArray,np.ndarray) == True
 
 
 
