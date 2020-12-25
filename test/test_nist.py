@@ -25,7 +25,7 @@ class TestCore(object):
         
         reference_temperature = get_reference_NIST_values(serial_number)
 
-        assert np.shape(test_array) == (len(reference_temperature),1)
+        assert np.shape(test_array) == np.shape(reference_temperature)
         assert isinstance(test_array,np.ndarray) == True
 
     @pytest.mark.unit
@@ -38,4 +38,4 @@ class TestCore(object):
 
         reference_temperature = get_reference_NIST_values(serial_number)
 
-        assert  np.testing.assert_array_equal(test_temperature, reference_temperature)
+        np.testing.assert_array_almost_equal(test_temperature, reference_temperature, decimal=5)

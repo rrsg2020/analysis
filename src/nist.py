@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import interpolate
-import matplotlib.pyplot as plt
 
 def get_reference_NIST_values(serial_number):
     '''get_reference_NIST_values
@@ -118,11 +117,9 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
     
         #Cubic Spline (define output as array and dictionary)
         spline_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
-        spline_estimatedT1_dictionary = {};
     
         #Cubic (define output as array and dictionary)
         cubic_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
-        cubic_estimatedT1_dictionary = {};
         
         outputArray = np.empty([len(sphereID),len(input_temperature)]);
         
@@ -133,19 +130,18 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
                     #Cubic Spline
                     cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
                     spline_estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline);
-                    spline_estimatedT1_dictionary[l,k+1] = spline_estimatedT1[k,l];
-                    #outputArray[k,l] = spline_estimatedT1[l,k];
                     outputArray = spline_estimatedT1;
                 elif interpolation=='cubic':
                     #Cubic        
                     cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic');
                     cubic_estimatedT1[k,l] = cubic(input_temperature[l]);
-                    cubic_estimatedT1_dictionary[l,k+1] = cubic_estimatedT1[k,l];
-                    #outputArray[k,l] = cubic_estimatedT1[l,k];
                     outputArray = cubic_estimatedT1;
                 else:
                     print('Invalid interpolation (choose from "cubic-spline" (default), "cubic"')
                     return None
+                
+        if 'input2array' in locals():
+            outputArray = outputArray.reshape((len(sphereID),))
         
         return outputArray
                     
