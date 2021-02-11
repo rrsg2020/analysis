@@ -1,4 +1,4 @@
-name: analysis_arm_2
+name: analysis_arm
 channels:
     - conda-forge
 dependencies:
