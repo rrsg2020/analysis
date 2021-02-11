@@ -1,7 +1,8 @@
 name: analysis_arm_2
 channels:
     - conda-forge
-dependencies: 
+dependencies:
+    - python=3.8
     - jupyter
     - certifi
     - chardet
