@@ -1,0 +1,25 @@
+name: analysis_arm_2
+channels:
+    - conda-forge
+dependencies: 
+    - jupyter
+    - certifi
+    - chardet
+    - idna
+    - imageio
+    - numpy
+    - Pillow
+    - requests
+    - scipy
+    - tqdm
+    - urllib3
+    - nibabel
+    - matplotlib
+    - pandas
+    - openpyxl
+    - plotly==3.10.0
+    - pytest
+    - pip
+    - pip:
+      - wget
+      - gifmaker
