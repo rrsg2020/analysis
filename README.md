@@ -44,6 +44,7 @@ and will create labels for the initial affine transformation.
 ```shell
 conda env create -f environment_ARM.yml
 conda activate analysis_arm 
-python setup_ARM.py install  
+python setup_ARM.py install
+python -m ipykernel install --user --name=analysis_arm
 pytest
 ```
