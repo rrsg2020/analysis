@@ -16,6 +16,7 @@ measuredT1_against_referenceT1 <- function(scans){
     
     phantomTemperature = as.numeric(data[j,"phantom.temperature"])
     phantomVersion = as.numeric(data[j,"phantom.version"])
+    id = data[j,"id"]
     
     if (phantomVersion<42){
       refValue = temperature_correction(phantomTemperature,phantomVersion)
@@ -33,10 +34,10 @@ measuredT1_against_referenceT1 <- function(scans){
     
     sph <- 1:14
     stdValues <- stdSites[,j]
-    std2plot <- data.frame(sph, stdValues)
+    std2plot <- data.frame(refValue, stdValues)
     
     rmseValues <- rmseSites[,j]
-    rmse2plot <- data.frame(sph, rmseValues)
+    rmse2plot <- data.frame(refValue, rmseValues)
     
     #Bland-Altman analysis
     measValue <- meanSites[,j]
@@ -61,9 +62,9 @@ measuredT1_against_referenceT1 <- function(scans){
     
     #PLOTS
     #Dispersion
-    dispersionList[[j]] = ggplot(data = data2plot, mapping = aes(x = reference, y = measValue)) +
-      geom_point(color = "black", size = 1) +
-      labs(title = "Dispersion plot", x = "Reference T1 value (ms)", y = "Measured T1 value (ms)") +
+    p = ggplot(data = data2plot, mapping = aes(x = reference, y = measValue)) +
+      geom_point(color = "black", size = 1.5) +
+      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 value (ms)", y = "Measured T1 value (ms)") +
       geom_smooth(method = "lm", se = TRUE, color = "red", lwd = 0.5) +
       geom_abline(intercept = 0, slope = 1, lwd = 0.7, col = "blue") +
       theme(axis.line = element_line(colour = "black"), 
@@ -71,12 +72,15 @@ measuredT1_against_referenceT1 <- function(scans){
             panel.grid.minor = element_blank(), 
             panel.border = element_blank(), 
             panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+                         axis.title = element_text(size = 12),
+                         axis.text = element_text(size = 12))
+    dispersionList[[j]] = ggplotly(p)
     
     #Bland-Altman
-    BAList[[j]] <- ggplot(data = data2plot, aes(x = average, y = difference)) +
+    p <- ggplot(data = data2plot, aes(x = average, y = difference)) +
       geom_point(pch = 1, size = 1.5, col = "black") +
-      labs(title = "Bland-Altman plot", x = "Average T1 (ms)", 
+      labs(title = paste("Site ID:", id, sep = ""), x = "Average T1 (ms)", 
            y = "Measured - Reference") +
       geom_smooth(method = "lm", se = TRUE, fill = "lightgrey", lwd = 0.1, lty = 5) +
       ylim(mean(data2plot$difference) - 4 * sd(data2plot$difference), 
@@ -94,35 +98,44 @@ measuredT1_against_referenceT1 <- function(scans){
                  lty = 2, col = "firebrick") +
       theme(panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank()) +
-      geom_text(label = "Bias", x = 991, y = -18, size = 3, 
+      geom_text(label = "Bias", x = 2000, y = 30, size = 3, 
                 colour = "black") +
-      geom_text(label = "+1.96SD", x = 960, y = 50, size = 3, 
+      geom_text(label = "+1.96SD", x = 2000, y = 190, size = 3, 
                 colour = "firebrick") +
-      geom_text(label = "-1.96SD", x = 960, y = -103, size = 3, 
+      geom_text(label = "-1.96SD", x = 2000, y = -110, size = 3, 
                 colour = "firebrick") +
-      theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+                         axis.title = element_text(size = 12),
+                         axis.text = element_text(size = 12))
+    BAList[[j]] = ggplotly(p)
     
     #STD
-    stdList[[j]] = ggplot(data = std2plot, aes(x = sph, y = stdValues)) +
-      geom_point(color = "black", size = 1) +
-      labs(title = "Standard Deviation", x = "Sphere", y = "SD (ms)") +
+    p = ggplot(data = std2plot, aes(x = refValue, y = stdValues)) +
+      geom_point(color = "black", size = 1.5) +
+      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 (ms)", y = "SD (ms)") +
       theme(axis.line = element_line(colour = "black"), 
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
             panel.border = element_blank(), 
             panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+                         axis.title = element_text(size = 12),
+                         axis.text = element_text(size = 12))
+    stdList[[j]] = ggplotly(p)
     
     #RMSE
-    rmseList[[j]] = ggplot(data = rmse2plot, aes(x = sph, y = rmseValues)) +
-      geom_point(color = "black", size = 1) +
-      labs(title = "Root Mean Square Error", x = "Sphere", y = "RMSE (ms)") +
+    p = ggplot(data = rmse2plot, aes(x = refValue, y = rmseValues)) +
+      geom_point(color = "black", size = 1.5) +
+      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 (ms)", y = "RMSE (ms)") +
       theme(axis.line = element_line(colour = "black"), 
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(), 
             panel.border = element_blank(), 
             panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(hjust = 0.5))
+      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+                         axis.title = element_text(size = 12),
+                         axis.text = element_text(size = 12))
+    rmseList[[j]] = ggplotly(p)
   }
   returnStats <- list("Correlation_coefficients" = correlations,
                      "Bland_Altman" = BAList,
