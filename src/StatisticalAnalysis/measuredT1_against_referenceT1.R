@@ -64,7 +64,7 @@ measuredT1_against_referenceT1 <- function(scans){
     #Dispersion
     p = ggplot(data = data2plot, mapping = aes(x = reference, y = measValue)) +
       geom_point(color = "black", size = 1.5) +
-      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 value (ms)", y = "Measured T1 value (ms)") +
+      labs(x = "Reference T1 value (ms)", y = "Measured T1 value (ms)") +
       geom_smooth(method = "lm", se = TRUE, color = "red", lwd = 0.5) +
       geom_abline(intercept = 0, slope = 1, lwd = 0.7, col = "blue") +
       theme(axis.line = element_line(colour = "black"), 
