@@ -69,8 +69,8 @@ def get_NIST_ids():
     ]
     return ids
 
-def temperature_correction(input_temperature,serial_number,interpolation='cubic-spline'):
-    if serial_number>=42:
+def temperature_correction(input_temperature,serial_number,interpolation='quadratic'):
+    if serial_number>=0:
         #Dictionary of data
         phantom_v2 = {
             '14': {'16': '21.94', '18': '21.62','20': '21.44', '22': '21.28', '24': '21.26', '26': '21.31'},
@@ -115,29 +115,38 @@ def temperature_correction(input_temperature,serial_number,interpolation='cubic-
             input_temperature[0] = input2array;
     
     
-        #Cubic Spline (define output as array and dictionary)
+        #Cubic Spline (define output as array)
         spline_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
     
-        #Cubic (define output as array and dictionary)
+        #Cubic (define output as array)
         cubic_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
+        
+        #Quadratic (define output as array. Data represented log-log)
+        quadratic_estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
         
         outputArray = np.empty([len(sphereID),len(input_temperature)]);
         
         #Interpolations
         for k in range(len(sphereID)):
             for l in range(len(input_temperature)):
-                if interpolation=='cubic-spline':
-                    #Cubic Spline
-                    cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
-                    spline_estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline);
-                    outputArray = spline_estimatedT1;
+                if interpolation=='quadratic':
+                    #log-log data representation 
+                    quad = interpolate.interp1d(np.log10(data[:,0]), np.log10(data[:,k+1]), kind='quadratic');
+                    quadratic_estimatedT1[k,l] = quad(np.log10(input_temperature[l]));
+                    #Output temperature NOT in log scale
+                    outputArray = 10 ** quadratic_estimatedT1;
                 elif interpolation=='cubic':
                     #Cubic        
                     cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic');
                     cubic_estimatedT1[k,l] = cubic(input_temperature[l]);
                     outputArray = cubic_estimatedT1;
+                elif interpolation=='cubic-spline':
+                    #Cubic Spline
+                    cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
+                    spline_estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline);
+                    outputArray = spline_estimatedT1;
                 else:
-                    print('Invalid interpolation (choose from "cubic-spline" (default), "cubic"')
+                    print('Invalid interpolation (choose from "quadratic" (default), "cubic-spline", "cubic"')
                     return None
                 
         if 'input2array' in locals():
