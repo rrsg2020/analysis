@@ -1,12 +1,6 @@
-library("reticulate")
-library("Metrics")
-library("ggplot2")
-library("epiR")
-library("irr")
-
-path_to_CSVfile = "PATH/TO/DATABASES/"
-path_to_src = "PATH/TO/SRC/"
-path_to_python = "PATH/TO/PYTHON/INSTALLATION/"
+##Call Python script from R##
+use_python(path_to_python, required=T)
+source_python(paste(path_to_src, "nist.py", sep = ""))
 
 data <- read.csv(paste(path_to_CSVfile, "3T_NIST_T1maps_database.csv", sep = ""))
 data[] <- gsub("[][]", "", as.matrix(data))
@@ -26,7 +20,7 @@ for (i in submission){
 }
 
 ##COMPARE MAGNITUDE VS COMPLEX##
-source(paste(path_to_src, "StatisticalAnalysis\\comparison_magnitude_complex.R", sep = ""))
+source(paste(path_to_stats, "comparison_magnitude_complex.R", sep = ""))
 
 cases <- c(1,seq(11,25,2),34,36)
 
@@ -34,26 +28,24 @@ cases <- c(1,seq(11,25,2),34,36)
 magVScomp <- comparison_magnitude_complex(cases,listSpheres)
 
 ##ANALYSIS WITHIN GROUPS ACROSS SITES
-source(paste(path_to_src, "StatisticalAnalysis\\comparison_across_sites.R", sep = ""))
+source(paste(path_to_stats, "comparison_across_sites.R", sep = ""))
 
-germany <- 34:37
-site <- germany
+US <- 34:39
+Germany <- 13:26
+Canada <- c(4,11,12,27:30,40)
 
-comparisonSite <- comparison_across_sites(site = germany)
-
-##Call Python script from R##
-use_python(path_to_python, required=T)
-source_python(paste(path_to_src, "nist.py", sep = ""))
+SiteUS <- comparison_across_sites(US)
+SiteGermany <- comparison_across_sites(Germany)
 
 ##COMPARISON BETWEEN MEASURED AND REFERENCE T1 VALUES##
-source(paste(path_to_src, "StatisticalAnalysis\\measuredT1_against_referenceT1.R", sep = ""))
+source(paste(path_to_stats, "measuredT1_against_referenceT1.R", sep = ""))
 
 scans <- 1:4
-stats <- measuredT1_against_referenceT1(scans)
+#scans <- list(Germany, Canada)
+RefVSMeas <- measuredT1_against_referenceT1(scans)
 
+##LINEAR MIXED EFFECTS MODEL##
+source(paste(path_to_stats, "linear_mixed_effects_model.R", sep = ""))
 
-#dispersionList[[2]]
-#BAList[[1]]
-#stdList[[1]]
-#rmseList[[1]]
-
+sites <- 1:6
+sitesLMEM <- linear_mixed_effects_model(sites)

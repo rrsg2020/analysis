@@ -3,145 +3,90 @@ measuredT1_against_referenceT1 <- function(scans){
   stdSites <- data.frame()
   mseSites <- data.frame()
   rmseSites <- data.frame()
-  correlations <- data.frame(ICC=as.numeric(), R=as.numeric(), Lin=as.numeric())
-  dispersionList = list()
-  BAList = list()
-  stdList = list()
-  rmseList = list()
-  for (j in scans){
-    data2plot <- data.frame()
-    std2plot <- data.frame()
-    rmse2plot <- data.frame()
-    data2coef <- data.frame()
-    
+  data4icc <- data.frame()
+  correlations <- data.frame(Site=as.numeric(), R=as.numeric(), Lin=as.numeric())
+  correlations2 <- data.frame(R=as.numeric(), Lin=as.numeric(), ICC=as.numeric())
+  for (j in seq(1,length(scans))){
     phantomTemperature = as.numeric(data[j,"phantom.temperature"])
     phantomVersion = as.numeric(data[j,"phantom.version"])
-    id = data[j,"id"]
+    id = data[scans[j],"id"]
     
     if (phantomVersion<42){
-      refValue = temperature_correction(phantomTemperature,phantomVersion)
+      refT1 = temperature_correction(phantomTemperature,phantomVersion)
     } else {
-      refValue = temperature_correction(phantomTemperature,phantomVersion)
+      refT1 = temperature_correction(phantomTemperature,phantomVersion)
     }
     
     for (k in seq(1,14)){
-      measuredT1 = as.numeric(unlist(listSpheres[[j]][k]))
+      measuredT1 = as.numeric(unlist(listSpheres[[scans[j]]][k]))
       meanSites[k,j] = mean(measuredT1)
       stdSites[k,j] = sd(measuredT1)
-      mseSites[k,j] = rmse(measuredT1, rep(refValue[k],length(measuredT1)))
-      rmseSites[k,j] = sqrt(rmse(measuredT1, rep(refValue[k],length(measuredT1))))
+      rmseSites[k,j] = rmse(measuredT1, rep(refT1[k],length(measuredT1)))
+      
+      #Data for the ICC calculation
+      data4icc[k,j] = abs(meanSites[k,j] - refT1[k])*100/refT1[k]
     }
     
-    sph <- 1:14
-    stdValues <- stdSites[,j]
-    std2plot <- data.frame(refValue, stdValues)
-    
-    rmseValues <- rmseSites[,j]
-    rmse2plot <- data.frame(refValue, rmseValues)
+    sid <- as.matrix(rep(id,14))
+    sph <- as.matrix(1:14)
     
     #Bland-Altman analysis
     measValue <- meanSites[,j]
-    reference <- refValue
+    reference <- refT1
     difference <- measValue - reference
     average <- (measValue + reference)/2
-    data2plot <- data.frame(measValue, reference, difference, average)
+    perc_difference <- difference*100/average
+    BA2plot <- data.frame(sid, sph, measValue, reference, difference, perc_difference, average)
+    
+    #STD
+    stdValues <- stdSites[,j]
+    std2plot <- data.frame(sid, sph, refT1, stdValues)
+    
+    #RMSE
+    rmseValues <- rmseSites[,j]
+    rmse2plot <- data.frame(sid, sph, refT1, rmseValues)
+    
+    #Long format data frame
+    if (j==1){
+      stdTmp = rbind(data.frame(), std2plot)
+      rmseTmp = rbind(data.frame(), rmse2plot)
+      BATmp = rbind(data.frame(), BA2plot)
+    }
+    else{
+      stdData = rbind(stdTmp, std2plot)
+      rmseData = rbind(rmseTmp, rmse2plot)
+      BAData = rbind(BATmp, BA2plot)
+      stdTmp <- stdData
+      rmseTmp <- rmseData
+      BATmp <- BAData
+    }
     
     data2coef <- data.frame(measValue, reference)
-    #ICC(1,1): It reflects the variation between 2 or more raters who measure the same group of subjects.
-    icc_test = icc(data2coef, model = "oneway", type = "agreement")
-    
     #Pearson correlation coefficient
     Pearson_test = cor(data2coef)
     
     #Lin's concordance correlation coefficient
     Lin_test = epi.ccc(data2coef[,1], data2coef[,2])
     
-    correlations[j,1] = icc_test[7]
+    correlations[j,1] = id
     correlations[j,2] = Pearson_test[1,2]
     correlations[j,3] = Lin_test[[1]][1]
-    
-    #PLOTS
-    #Dispersion
-    p = ggplot(data = data2plot, mapping = aes(x = reference, y = measValue)) +
-      geom_point(color = "black", size = 1.5) +
-      labs(x = "Reference T1 value (ms)", y = "Measured T1 value (ms)") +
-      geom_smooth(method = "lm", se = TRUE, color = "red", lwd = 0.5) +
-      geom_abline(intercept = 0, slope = 1, lwd = 0.7, col = "blue") +
-      theme(axis.line = element_line(colour = "black"), 
-            panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.border = element_blank(), 
-            panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-                         axis.title = element_text(size = 12),
-                         axis.text = element_text(size = 12))
-    dispersionList[[j]] = ggplotly(p)
-    
-    #Bland-Altman
-    p <- ggplot(data = data2plot, aes(x = average, y = difference)) +
-      geom_point(pch = 1, size = 1.5, col = "black") +
-      labs(title = paste("Site ID:", id, sep = ""), x = "Average T1 (ms)", 
-           y = "Measured - Reference") +
-      geom_smooth(method = "lm", se = TRUE, fill = "lightgrey", lwd = 0.1, lty = 5) +
-      ylim(mean(data2plot$difference) - 4 * sd(data2plot$difference), 
-           mean(data2plot$difference) + 4 * sd(data2plot$difference)) +
-      # Línea de bias
-      geom_hline(yintercept = mean(data2plot$difference), lwd = 1) +
-      # Línea en y=0
-      geom_hline(yintercept = 0, lty = 3, col = "grey30") +
-      # Limits of Agreement
-      geom_hline(yintercept = mean(data2plot$difference) + 
-                   1.96 * sd(data2plot$difference), 
-                 lty = 2, col = "firebrick") +
-      geom_hline(yintercept = mean(data2plot$difference) - 
-                   1.96 * sd(data2plot$difference), 
-                 lty = 2, col = "firebrick") +
-      theme(panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank()) +
-      geom_text(label = "Bias", x = 2000, y = 30, size = 3, 
-                colour = "black") +
-      geom_text(label = "+1.96SD", x = 2000, y = 190, size = 3, 
-                colour = "firebrick") +
-      geom_text(label = "-1.96SD", x = 2000, y = -110, size = 3, 
-                colour = "firebrick") +
-      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-                         axis.title = element_text(size = 12),
-                         axis.text = element_text(size = 12))
-    BAList[[j]] = ggplotly(p)
-    
-    #STD
-    p = ggplot(data = std2plot, aes(x = refValue, y = stdValues)) +
-      geom_point(color = "black", size = 1.5) +
-      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 (ms)", y = "SD (ms)") +
-      theme(axis.line = element_line(colour = "black"), 
-            panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.border = element_blank(), 
-            panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-                         axis.title = element_text(size = 12),
-                         axis.text = element_text(size = 12))
-    stdList[[j]] = ggplotly(p)
-    
-    #RMSE
-    p = ggplot(data = rmse2plot, aes(x = refValue, y = rmseValues)) +
-      geom_point(color = "black", size = 1.5) +
-      labs(title = paste("Site ID:", id, sep = ""), x = "Reference T1 (ms)", y = "RMSE (ms)") +
-      theme(axis.line = element_line(colour = "black"), 
-            panel.grid.major = element_blank(), 
-            panel.grid.minor = element_blank(), 
-            panel.border = element_blank(), 
-            panel.background = element_blank()) +
-      theme_bw() + theme(plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-                         axis.title = element_text(size = 12),
-                         axis.text = element_text(size = 12))
-    rmseList[[j]] = ggplotly(p)
   }
+  
+  #ICC(2,1): It reflects the variation between 2 or more raters who measure the same group of subjects.
+  icc_test = icc(data4icc, model = "twoway", type = "agreement")
+  Pearson_test2 = cor(BAData$measValue, BAData$reference)
+  Lin_test2 = epi.ccc(BAData$measValue, BAData$reference)
+  correlations2[1,1] = Pearson_test2
+  correlations2[1,2] = Lin_test2[[1]][1]
+  correlations2[1,3] = icc_test[7]
+  
   returnStats <- list("Correlation_coefficients" = correlations,
-                     "Bland_Altman" = BAList,
-                     "Dispersion" = dispersionList,
-                     "STD" = stdList,
-                     "RMSE" = rmseList)
+                     "BAData" = BAData,
+                     "stdData" = stdData,
+                     "rmseData" = rmseData,
+                     "corr_coef_site" = correlations2,
+                     "test" = data4icc)
   return(returnStats)
   
 }
