@@ -1,11 +1,3 @@
-library("reticulate")
-library("Metrics")
-library("ggplot2")
-library("epiR")
-library("lme4")
-library("irr")
-library("sjPlot")
-library("plotly")
 requiredPackages = c('reticulate', 'Metrics', 'ggplot2', 'epiR', 'lme4', 'irr', 'sjPlot', 'plotly',
                      'shiny', 'shinythemes', 'shinydashboard')
 for(p in requiredPackages){
