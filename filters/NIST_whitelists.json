@@ -18,7 +18,7 @@
 				"If multiple datasets were acquired using different repetition times, the datasets with the repetition times that differed the most from the one asked for the challend were excluded.",
 				"If multiple scans were done using fat saturation mode on and off, the datasets with fat saturation off were excluded."
 			]
-		}
+		},
 		"NIST spheres": {
 			"description": "This is a whitelist for statistical analyses of the spheres.",
 			"whitelist": [
