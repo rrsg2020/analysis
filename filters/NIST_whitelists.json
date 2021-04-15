@@ -1,10 +1,10 @@
 {
-	"description": "These are whitelists to assist with the data analyses of the ISMRM 2020 T1 mapping reproducibility challenge. Because every site did not follow the same acquisition protocol exactly, or acquired multiple datasets, whitelists were developed to know what datasets to use for certain analyses. The whitelists are of the site IDs, which are meant to be used with the databases here: https://github.com/rrsg2020/analysis/tree/master/databases. Exclusion criteria for the whitelists are also included.",
+	"description": "These are whitelists to assist with the data analyses of the ISMRM 2020 T1 mapping reproducibility challenge.",
 	"data website": "https://osf.io/ywc9g/",
 	"code website": "https://github.com/rrsg2020/analysis",
 	"whitelists": {
 		"one measurement per scanner": {
-			"description": "This white list is for analyses where one scan per scanner/site per are needed.",
+			"description": "This white list is for analyses where one scan per scanner/site per are needed.  Because every site did not follow the same acquisition protocol exactly, or acquired multiple datasets, whitelists were developed to know what datasets to use for certain analyses. The whitelists are of the site IDs, which are meant to be used with the databases here: https://github.com/rrsg2020/analysis/tree/master/databases. Exclusion criteria for the whitelists are also included."",
 			"whitelist": [
 				1.002, 2.001, 3.001, 4.001, 4.002, 5.002,
 				6.002, 6.004, 6.006, 6.008, 6.010, 6.012,
