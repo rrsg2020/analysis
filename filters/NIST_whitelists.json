@@ -25,7 +25,7 @@
 				1, 2, 3, 4, 5, 6, 7
 			],
 			"exclusion criteria": [
-				"We think that it is fair to exclude spheres 8-14 in certain analyses, as we knew prior to the challenge that the imaging protocol (specifically, the inversion times 50, 400, 1100, 2500 ms) were only optimized for the human range of T1 values (spheres 1-5). Our preliminary analyses using our dashboard (http://rrsg2020.herokuapp.com/apps/phantom) also showed increasing standard deviations in the ROIs jump up starting at about sphere 8, even though the difference in the mean stays low until about spheres 10-14. 
+				"We think that it is fair to exclude spheres 8-14 in certain analyses, as we knew prior to the challenge that the imaging protocol (specifically, the inversion times 50, 400, 1100, 2500 ms) were only optimized for the human range of T1 values (spheres 1-5). Our preliminary analyses using our dashboard (http://rrsg2020.herokuapp.com/apps/phantom) also showed increasing standard deviations in the ROIs jump up starting at about sphere 8, even though the difference in the mean stays low until about spheres 10-14." 
 			]
 		}
 	}
