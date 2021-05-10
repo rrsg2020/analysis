@@ -77,11 +77,11 @@ def temperature_correction(input_temperature,serial_number,interpolation='quadra
         input_temperature - Temperature (°C) at which the phantom measurements were taken
         serial_number - Phantom serial number
         interpolation - 'quadratic' (default), 'cubic' and 'cubic-spline':
-            'quadratic' - A low order polynomial was used to fit a log-log representation of the data
-            'cubic' and 'cubic-spline' were used on the original data, no transformations applied
+            'quadratic' - A low order polynomial will be used to fit a log-log representation of the data
+            'cubic' and 'cubic-spline' will be used to fit the original data (not in logarithmic scale).
 
     OUTPUT:
-        Array of temperature-corrected T1 values
+        Array of temperature-corrected reference T1 values
 
     EXAMPLE:
         temperature_correction(20,42) = array([1883.97, 1330.16,  987.27,  690.08,  484.97,  341.58,  240.86,
@@ -116,32 +116,32 @@ def temperature_correction(input_temperature,serial_number,interpolation='quadra
         '3': {'16': '950.71', '18': '963.56','20': '987.27', '22': '1000.81', '24': '1015.70', '26': '1030.78'},
         '2': {'16': '1274.07', '18': '1317.71','20': '1330.16', '22': '1355.29', '24': '1367.79', '26': '1395.94'},
         '1': {'16': '1766.68', '18': '1830.34','20': '1883.97', '22': '1937.34', '24': '1987.50', '26': '2066.95'}
-        };
+        }
     
     ##Get keys and values of dictionary to construct a 2D array##
     #Get dictionary keys as lists
-    sphereID = list(phantom_v2.keys());
-    temperature = list(phantom_v2['1'].keys());
+    sphereID = list(phantom_v2.keys())
+    temperature = list(phantom_v2['1'].keys())
     
     #Define array (data) to store data for interpolation
-    data = np.empty([len(temperature),len(sphereID)+1]);
+    data = np.empty([len(temperature),len(sphereID)+1])
     #Fill data array
-    row = 0;
+    row = 0
     for i in temperature:
         row = row + 1;
         data[row-1,0] = int(i);
         for j in sphereID:
-            T1_value = float(phantom_v2[j][i]);
-            data[row-1,int(j)] = T1_value;
+            T1_value = float(phantom_v2[j][i])
+            data[row-1,int(j)] = T1_value
 
     ##Code for Temperature Correction: Interpolation##
     #If input_temperature is a scalar:
     #Validate input_temperature
-    validTemperature = lambda input_temperature: np.isscalar(input_temperature);
+    validTemperature = lambda input_temperature: np.isscalar(input_temperature)
     if validTemperature(input_temperature) == True:
-        input2array = input_temperature;
-        input_temperature = np.arange(1);
-        input_temperature[0] = input2array;
+        input2array = input_temperature
+        input_temperature = np.arange(1)
+        input_temperature[0] = input2array
     
     #Define output arrays     
     estimatedT1 = np.empty([len(sphereID),len(input_temperature)]);
@@ -153,32 +153,32 @@ def temperature_correction(input_temperature,serial_number,interpolation='quadra
         for l in range(len(input_temperature)):
             if interpolation=='quadratic':
                 #log-log data representation 
-                quad = interpolate.interp1d(np.log10(data[:,0]), np.log10(data[:,k+1]), kind='quadratic');
-                estimatedT1[k,l] = quad(np.log10(input_temperature[l]));
+                quad = interpolate.interp1d(np.log10(data[:,0]), np.log10(data[:,k+1]), kind='quadratic')
+                estimatedT1[k,l] = quad(np.log10(input_temperature[l]))
             elif interpolation=='cubic':
                 #Cubic        
-                cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic');
-                estimatedT1[k,l] = cubic(input_temperature[l]);
+                cubic = interpolate.interp1d(data[:,0], data[:,k+1], kind='cubic')
+                estimatedT1[k,l] = cubic(input_temperature[l])
             elif interpolation=='cubic-spline':
                 #Cubic Spline
-                cubicSpline = interpolate.splrep(data[:,0], data[:,k+1]);
-                estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline);
+                cubicSpline = interpolate.splrep(data[:,0], data[:,k+1])
+                estimatedT1[k,l] = interpolate.splev(input_temperature[l],cubicSpline)
             else:
                 print('Invalid interpolation (choose from "quadratic" (default), "cubic-spline", "cubic"')
                 return None
                 
     if interpolation=='quadratic':
         #Output temperature NOT in log scale yet
-        outputArray = np.power(10,estimatedT1);
+        outputArray = np.power(10,estimatedT1)
     else:
-        outputArray = estimatedT1;
+        outputArray = estimatedT1
                 
     if 'input2array' in locals():
         outputArray = outputArray.reshape((len(sphereID),))
 
     #Returning the array with temperature-corrected T1 values
     if serial_number>=42:
-        outputArray = outputArray;
+        outputArray = outputArray
         return outputArray
     elif serial_number<42:
         outputArray = outputArray*(get_reference_NIST_values(41)/get_reference_NIST_values(42))
