@@ -1,11 +1,11 @@
 id,OSF dataset,OSF link,NIFTI filename,Data type,contact,site name,MRI vendor,MRI version,MRI field,sample type,phantom version,phantom serial number,phantom temperature,age,sex,sequence name,sequence type,matrix size,resolution,dimension,TR,echo time,TI,bandwidth,T1 - genu (WM),T1 - splenium (WM),T1 - deep GM,T1 - cortical GM,T1 - NIST sphere 1,T1 - NIST sphere 2,T1 - NIST sphere 3,T1 - NIST sphere 4,T1 - NIST sphere 5,T1 - NIST sphere 6,T1 - NIST sphere 7,T1 - NIST sphere 8,T1 - NIST sphere 9,T1 - NIST sphere 10,T1 - NIST sphere 11,T1 - NIST sphere 12,T1 - NIST sphere 13,T1 - NIST sphere 14
-1.001,refaatgabr_mcgovern_human,https://osf.io/2f8j5/download/,20200103_refaatgabr_mcgovern_human/20200103_refaatgabr_mcgovern_human_T1map.nii.gz,Magnitude,Refaat Gabr,UTHealth McGovern Medical School,Philips,Ingenia R5.4.1,3.0,,,,,42,male,T1CHALLENGE^T1CHALLENGE_WIP_IR_0050_FSL_6_1,TSE inversion recovery,['256 256 1'],['1 1 2'],2D,2560.0,14.0,"[50, 400, 1100, 2500]",173.8,"[1306.3 1195.7 1258.8 1389.5 1484.2 1217.3 1236.7 1223.9 1314.8 1347.
- 1210.2 1220.4 1250.9 1177.3 1136.7 1212.8 1193.6 1268.3 1199.9 1099.1
- 1225.8 1282.4 1344.7 1279.1 1155.5]","[1283.8 1308.3 1358.2 1352.2 1299.9 1303.  1264.4 1329.1 1357.4 1287.7
- 1349.8 1303.7 1313.8 1290.3 1272.2 1257.5 1252.7 1258.8 1202.8 1215.2
- 1303.2 1267.8 1224.4 1221.8 1228.2]",[],"[4074.4 2741.4 2492.2 2785.8 2123.1 1952.  2478.3 2212.7 1949.5 2532.7
- 2518.8 2657.4 2587.  2568.3 2650.7 2704.4 2822.1 2775.  2592.4 2399.8
- 2368.2 2452.7 2320.4 2600.7 2505.6 2293.5 2668. ]",,,,,,,,,,,,,,
+1.001,refaatgabr_mcgovern_human,https://osf.io/2f8j5/download/,20200103_refaatgabr_mcgovern_human/20200103_refaatgabr_mcgovern_human_T1map.nii.gz,Magnitude,Refaat Gabr,UTHealth McGovern Medical School,Philips,Ingenia R5.4.1,3.0,,,,,42,male,T1CHALLENGE^T1CHALLENGE_WIP_IR_0050_FSL_6_1,TSE inversion recovery,['256 256 1'],['1 1 2'],2D,2560.0,14.0,"[50, 400, 1100, 2500]",173.8,"[ 928.4  861.1  909.5  992.1 1049.1  869.6  882.5  878.7  939.1  966.
+  863.9  869.7  894.1  851.   831.8  866.9  855.1  901.8  858.8  800.3
+  871.8  909.8  943.   896.8  831.5]","[912.6 925.7 953.9 950.5 922.4 926.4 904.  944.1 959.5 915.5 951.3 928.4
+ 935.7 920.5 907.  898.3 898.2 903.2 865.1 872.1 928.7 905.4 880.9 878.1
+ 878.3]",[],"[2140.6 1676.3 1576.7 1700.7 1413.  1322.2 1579.2 1455.9 1321.4 1596.9
+ 1588.8 1648.5 1624.3 1619.  1657.2 1668.8 1723.5 1711.2 1603.7 1537.6
+ 1532.2 1542.5 1498.6 1624.7 1562.7 1476.6 1650.6]",,,,,,,,,,,,,,
 2.001,mrel_usc_human,https://osf.io/z8dyw/download/,20200128_mrel_usc_human/20200128_mrel_usc_GE3T_MR1_human_subject01_T1map.nii.gz,Magnitude,Nam Lee,Keck Medical Center of University of Southern California GE 1,GE,Signa HDxt,3.0,,,,,28,female,"2D Spin Echo, IR",Spin-echo inversion recovery,['256 256 1'],['0.75 0.75 2'],2D,2550.0,14.0,"[50, 400, 1100, 2500]",244.141,"[736.6 783.5 860.1 830.2 704.2 699.8 851.  818.2 822.5 854.7 865.6 888.7
  861.8 884.5 917.4 909.5 900.9 855.  877.9 873.9 906.9 867.2 873.3 938.6
  885.8]","[ 870.3  810.2  875.1  765.6  761.   912.1  845.7  909.5  980.3 1049.6
@@ -108,15 +108,15 @@ id,OSF dataset,OSF link,NIFTI filename,Data type,contact,site name,MRI vendor,MR
  922.7 824.  835.3 882.7 929.7 901.4 761.4 942.5]","[1219.8 1050.7 1077.  1183.3 1087.5 1203.6  980.  1061.5 1117.3 1147.7
  1022.2 1011.5 1191.9 1199.6 1258.1 1070.4 1230.5 1098.1 1247.1 1191. ]","[1161.9 1279.8 1357.  1610.6 1400.8 1334.2 1241.6 1252.7 1257.3 1178.2
  1144.2 1255.1 1281.6 1298.7 1237.7 1198.8 1228.7 1224.5]",,,,,,,,,,,,,,
-6.001,marcocastellaro_UniPD_human,https://osf.io/cg8nk/download/,20200219_marcocastellaro_UniPD_human/20200219_marcocastellaro_UniPD_human_Complex_T1map.nii.gz,Complex,Marco Castellaro,University of Padova,Philips,Ingenia,3.0,,,,,30,female,T1_IR,Spin-echo inversion recovery,['256 256 1'],['1 1 2'],2D,2700.0,14.0,"[50, 400, 1100, 2500]",157.47,"[566.  580.9 552.  570.1 658.1 583.1 593.1 564.5 572.3 585.3 564.9 561.1
- 540.6 555.5 549.1 547.1 559.8 522.7 533.5 530.8 556.6 553.5 527.6 546.1
- 547.1]","[566.5 583.  573.9 569.1 578.9 565.  584.3 543.5 558.6 582.7 546.4 570.1
- 547.3 571.8 589.6 526.7 552.8 537.4 533.6 574.6 546.1 571.2 550.9 537.8
- 574.1]","[ 977.2  968.6 1038.9 1032.2 1003.   974.4  986.7 1015.1  981.4  992.3
- 1005.2 1072.  1041.6 1001.7  982.6 1073.7 1053.8 1031.8 1050.5 1057.9
- 1133.1 1082.7 1043.4 1047.5 1084.6]","[1268.  1296.8 1284.2 1266.  1280.6 1303.5 1309.4 1257.6 1250.2 1270.
- 1154.8 1129.9 1293.4 1202.6 1128.  1305.3 1207.5 1178.7 1572.7 1463.8
- 1364.5 1665.5 1438.9 1359.4 1679.5 1397.5 1297.3]",,,,,,,,,,,,,,
+6.001,marcocastellaro_UniPD_human,https://osf.io/cg8nk/download/,20200219_marcocastellaro_UniPD_human/20200219_marcocastellaro_UniPD_human_Complex_T1map.nii.gz,Complex,Marco Castellaro,University of Padova,Philips,Ingenia,3.0,,,,,30,female,T1_IR,Spin-echo inversion recovery,['256 256 1'],['1 1 2'],2D,2700.0,14.0,"[50, 400, 1100, 2500]",157.47,"[798.7 811.8 780.3 818.8 888.4 819.7 835.  792.  809.1 834.2 818.  802.5
+ 773.1 796.3 794.4 794.8 790.5 736.1 766.3 770.5 788.6 799.4 751.8 778.1
+ 798.9]","[775.2 810.1 792.1 764.8 778.  789.9 802.6 753.3 767.4 801.7 758.1 794.
+ 772.9 798.6 818.6 733.5 759.2 753.1 738.9 777.8 779.5 792.7 773.2 740.3
+ 778.1]","[1184.  1238.9 1309.2 1296.6 1241.8 1204.5 1220.  1267.1 1223.9 1236.8
+ 1231.7 1321.5 1292.  1226.8 1212.3 1313.5 1293.3 1258.7 1299.4 1311.5
+ 1417.9 1340.  1278.5 1307.9 1325.7]","[1559.1 1591.4 1567.1 1530.5 1574.6 1591.8 1624.8 1554.5 1515.6 1571.1
+ 1439.1 1410.2 1628.  1519.  1406.3 1667.7 1512.4 1482.1 2009.2 1822.5
+ 1677.  2217.  1771.8 1729.4 2199.9 1710.9 1623.9]",,,,,,,,,,,,,,
 7.001,madelinecarr_lha_human,https://osf.io/h7fqs/download/,20200221_madelinecarr_lha_human/20200221_madelinecarr_lha_human_T1map.nii.gz,Magnitude,Madeline Carr,Liverpool Hospital Australia,Siemens,Magnetom Skyra,3.0,,,,,24,female,SE_IR,Spin-echo inversion recovery,['128 128 1'],['1.95 1.95 2'],2D,2550.0,14.0,"[50, 400, 1100, 2500]",130.0,"[827.2 828.  807.8 810.4 826.1 820.  840.  861.2 877.3 950.1 939.1 802.1
  777.7 829.2 810.4 792.7 814.  865.4]","[826.1 843.5 868.  796.1 815.9 797.6 773.5 770.  759.3 765.2 801.8 793.1
  809.5 815.8 780.5 853.3 821.9 840.8]","[1246.3 1177.4 1207.4 1196.5 1089.  1135.9 1011.9 1180.1 1277.7 1262.3
