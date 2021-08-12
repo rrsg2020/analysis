@@ -8,11 +8,10 @@
 			"whitelist": [
 				1.002, 2.001, 3.001, 4.001, 4.002, 5.002,
 				6.002, 6.004, 6.006, 6.008, 6.010, 6.012,
-				6.014, 7.002, 8.001, 8.002, 9.001, 11.002,
-				12.002, 13.001, 14.001
+				6.014, 7.002, 8.001, 8.002, 9.001, 10.002,
+				11.002, 12.001, 13.001
 			],
 			"exclusion criteria": [
-				"Any acquisitions acquired at fields other than 3T were excluded.",
 				"If both complex and magnitude-only data are available for a scane, the magnitude-only dataset was exluded.",
 				"If multiple scans were done using the same phantom on the same scanner, all scans except one were excluded.",
 				"If multiple datasets were acquired using different repetition times, the datasets with the repetition times that differed the most from the one asked for the challend were excluded.",
