@@ -5,7 +5,7 @@ gifmaker
 idna==2.9
 imageio==2.8.0
 numpy
-Pillow~=7.1
+Pillow
 requests==2.24.0
 scipy~=1.5
 tqdm==4.46.1
