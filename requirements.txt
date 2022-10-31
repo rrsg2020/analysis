@@ -5,13 +5,13 @@ gifmaker
 idna==2.9
 imageio==2.8.0
 numpy
-Pillow==7.1.2
+Pillow~=7.1
 requests==2.24.0
 scipy~=1.5
 tqdm==4.46.1
 urllib3==1.25.9
 wget==3.2
 nibabel==3.1.1
-matplotlib==3.3.0
+matplotlib~=3.
 pandas~=1.0
 openpyxl==3.0.4
