@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3:2020.07
+FROM continuumio/anaconda3
 
 # create user with a home directory
 ARG NB_USER
