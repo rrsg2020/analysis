@@ -6,7 +6,7 @@ ARG NB_UID
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 
-RUN apt-get update \
+RUN apt-get update; \
     apt-get install -y --no-install-recommends imagemagick
 
 RUN adduser --disabled-password \
