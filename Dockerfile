@@ -6,7 +6,8 @@ ARG NB_UID
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 
-RUN apt-get install -y --no-install-recommends imagemagick
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends imagemagick
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -16,7 +17,7 @@ WORKDIR $HOME
 USER ${USER}
 
 RUN cd $HOME;   \
-    git clone https://github.com/rrsg2020/analysis ;     \
+    git clone https://github.com/rrsg2020/analysis ;      \
     cd analysis;     \
     git checkout mb/plots; \
     pip install -r requirements.txt

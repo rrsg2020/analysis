@@ -1,6 +1,6 @@
 # Analysis
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rrsg2020/analysis/master?filepath=generate_database.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rrsg2020/analysis/master?filepath=analysis%2F)
 
 ## Registering images
 
@@ -10,7 +10,7 @@
 * Python 3.7
 * Clone this repository and install its requirements:
   ````bash
-  git lone https://github.com/rrsg2020/analysis.git rrsg2020/analysis
+  git clone https://github.com/rrsg2020/analysis.git rrsg2020/analysis
   cd rrsg2020/analysis
   pip install -r requirements.txt
   ````
@@ -36,3 +36,15 @@ python register_t1maps_nist.py -j configs/3T_NIST.json -p 3T_NIST_pooled/ 3T_NIS
 
 Note: the registration script will download the reference mask (e.g. for the NIST phantom)
 and will create labels for the initial affine transformation. 
+
+## Installation instructions for ARM processors (e.g. Apple M1 chip on MacBook Pros 2020 and later).
+
+* Requirement: [Miniforge for OSX arm64](https://github.com/conda-forge/miniforge#miniforge3)
+
+```shell
+conda env create -f environment_ARM.yml
+conda activate analysis_arm 
+python setup_ARM.py install
+python -m ipykernel install --user --name=analysis_arm
+pytest
+```

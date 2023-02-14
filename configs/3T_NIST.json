@@ -213,19 +213,6 @@
             }
         }
     },
-    "niloufar_hfmc_NIST":{
-        "OSF_link": "https://osf.io/4w9kf/download/",
-        "datasets":{
-            "4point": {
-                "dataType": "Magnitude",
-                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_4point_NIST_Magnitude.nii.gz"
-            },
-            "14point": {
-                "dataType": "Magnitude",
-                "imagePath": "20200229_niloufar_hfmc_NIST/20200229_niloufar_hfmc_14point_NIST_Magnitude.nii.gz"
-            }
-        }
-    },
     "wang_MDAnderson_NIST":{
         "OSF_link": "https://osf.io/praxv/download/",
         "datasets":{

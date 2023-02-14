@@ -1,0 +1,26 @@
+name: analysis_arm
+channels:
+    - conda-forge
+dependencies:
+    - python=3.8
+    - jupyter
+    - certifi
+    - chardet
+    - idna
+    - imageio
+    - numpy
+    - Pillow
+    - requests
+    - scipy
+    - tqdm
+    - urllib3
+    - nibabel
+    - matplotlib
+    - pandas
+    - openpyxl
+    - plotly==3.10.0
+    - pytest
+    - pip
+    - pip:
+      - wget
+      - gifmaker
