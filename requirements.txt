@@ -4,8 +4,8 @@ chardet==3.0.4
 gifmaker
 idna==2.9
 imageio==2.8.0
-numpy~=1.19
-Pillow==7.1.2
+numpy
+Pillow
 requests==2.24.0
 scipy~=1.5
 tqdm==4.46.1
