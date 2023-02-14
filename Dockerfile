@@ -19,6 +19,6 @@ USER ${USER}
 RUN cd $HOME;   \
     git clone https://github.com/rrsg2020/analysis ;      \
     cd analysis;     \
-    git checkout mb/plots; \
+    git checkout master; \
     pip install -r requirements.txt
 
