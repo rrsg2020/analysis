@@ -7,7 +7,7 @@ def get_reference_NIST_values(serial_number):
     at 20C.
 
     The CaliberMRI/NIST quantitative MRI phantom has two versions, version 1 is
-    for serial numbers <0042 and version 2 is for serial numbers >=0042.
+    for serial numbers <0043 and version 2 is for serial numbers >=0043.
 
     T1 values are in ms.
 
@@ -15,7 +15,7 @@ def get_reference_NIST_values(serial_number):
     The values for version 2 are from an internal email with CaliberMRI, which they stated will be released
     in a new technical specifications document on their website near the end of August 2020.
     '''
-    if serial_number<42:
+    if serial_number<43:
         return np.array([
             1989,
             1454,
