@@ -177,11 +177,11 @@ def temperature_correction(input_temperature,serial_number,interpolation='quadra
         outputArray = outputArray.reshape((len(sphereID),))
 
     #Returning the array with temperature-corrected T1 values
-    if serial_number>=42:
+    if serial_number>=43:
         outputArray = outputArray
         return outputArray
-    elif serial_number<42:
-        outputArray = outputArray*(get_reference_NIST_values(41)/get_reference_NIST_values(42))
+    elif serial_number<43:
+        outputArray = outputArray*(get_reference_NIST_values(42)/get_reference_NIST_values(43))
         return outputArray
     else:
         print('Invalid serial number.')
