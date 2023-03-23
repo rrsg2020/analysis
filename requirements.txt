@@ -17,3 +17,4 @@ pandas~=1.0
 openpyxl==3.0.4
 plotly==3.10.0
 pytest
+dataframe_image
