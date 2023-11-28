@@ -9,7 +9,7 @@ Pillow
 requests==2.24.0
 scipy~=1.5
 tqdm==4.46.1
-urllib3==1.25.9
+urllib3==1.26.5
 wget==3.2
 nibabel==3.1.1
 matplotlib~=3.3
